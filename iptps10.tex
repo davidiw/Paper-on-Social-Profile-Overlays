@@ -1,0 +1,233 @@
+\documentclass[letterpaper,twocolumn,10pt]{article}
+\usepackage{times}
+\usepackage[small,compact]{titlesec}
+\usepackage[small,it]{caption}
+\usepackage{usenix}
+\usepackage{endnotes}
+\usepackage[tight]{subfigure}
+\usepackage{natbib}
+\setlength{\bibsep}{0.0pt}
+
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{epsfig}
+\usepackage{footnote}
+\usepackage{amsmath}
+
+\usepackage[compact]{titlesec}
+\titlespacing{\section}{0pt}{*.5}{*.5}
+\titlespacing{\subsection}{0pt}{*.5}{*.5}
+\titlespacing{\subsubsection}{0pt}{*.5}{*.5}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+\setlength{\headsep}{0pt}
+\setlength{\topskip}{0pt}
+\setlength{\topmargin}{0pt}
+\setlength{\topsep}{0pt}
+\setlength{\partopsep}{0pt}
+\widowpenalty=10000
+\clubpenalty=10000
+%\setlength{\parskip}{0pt}
+%\setlength{\dbltextfloatsep}{.2cm}
+%\setlength{\dblfloatsep}{.2cm}
+%\setlength{\textfloatsep}{.2cm}
+%\setlength{\floatsep}{.2cm}
+%\setlength{\topsep}{.2cm}
+%\setlength{\intextsep}{.2cm}
+%\setlength{\belowcaptionskip}{.2cm}
+%\renewcommand{\topfraction}{0.85}
+%\renewcommand{\textfraction}{0.1}
+%\renewcommand{\floatpagefraction}{0.85}
+%\hyphenpenalty=5000
+%\tolerance=1000
+
+\begin{document}
+
+\title{\Large \bf Towards Social Profile Based Overlays}
+
+\author{
+David Isaac Wolinsky,
+Pierre St. Juste,
+P. Oscar Boykin,
+Renato Figueiredo
+\\
+University of Florida
+\\
+}
+
+%\maketitle
+
+
+\twocolumn[%
+\centerline{\Large \bf Towards Social Profile Based Overlays}
+
+\medskip
+
+\centerline{\bf 
+  David Isaac Wolinsky,
+  Pierre St. Juste,
+  P. Oscar Boykin,
+  Renato Figueiredo
+}
+\centerline{
+  University of Florida
+}
+\bigskip
+]
+
+\subsection*{Abstract}
+Social networking has quickly become one of the most common activities of
+Internet users. As social networks evolve, they request more information from
+the users and thus requiring the users to place more trust into the social
+network. Peer-to-peer (P2P) overlays can return ownership of information and
+system control to the user as they can be constructed in a way to not require
+third party proxies.
+
+In this paper, we present a novel concept known as the structured social overlay
+that applies social networks to structured P2P overlays to provide ownership,
+scalability, reliability, and security. Each user's profile is assigned a
+unique private, secure overlay, where members of that overlay have a friendship
+with the overlay owner. The profile data is stored using the profile overlay's
+distributed data stores. To ensure privacy, the profile overlay employs the
+public key infrastructure, where the role of certificate authority (CA) is
+handled by the overlay owner and each member of the overlay has a CA signed
+certificate. Each member of the social network, joins a common public overlay,
+which provides services to discover friends and bootstrap connections into
+existing private overlays through a distributed data store. We define interfaces
+that can be used to implement this system as well as explore some of the
+challenges related to it.
+
+\section{Introduction}
+Social networking has become pervasive in daily life, though as social networks
+grow so does the wealth of personal information that they store.  Users become
+more dependent on social networks as users surrender tasks such as communication
+and identity to the social network.  Once information has been released to a
+social network, known as a user's profile, the user is at the mercy of the
+social network.  If the social network engages in activites disagreeable to the
+user, the user has the option to leave the social network surrendering their
+identity and features provided by the social network or to accept the
+disagreeable activities.
+
+Structured P2P overlays provide a scalable, resilient, and self-managing
+platform for distributed applications.  Structured overlays provide means
+by which users can easily create their own decentralized systems for the
+purpose of data sharing, interactive activities, and other networking enabled
+activities.  In recent work~\ref{icdcs10}, we have implemented mechanisms that
+allow users to create and manage their own private overlays using a common
+public overlay to assist in discovery and NAT traversing of the private overlay.
+In this paper, we further this work by an indepth discussion on how to apply
+this technique to social networks.
+
+Social networks consist of users, each of whom typically has a a profile, a set
+of friends, and a private message inbox.  The profile contains the users
+personal information, status updates, and public conversation with the friends.
+Friends are individual which the user trust sufficiently to view the profile.
+The private message inbox allows users to send messages between each other
+without leaking any information to other friends.  Using this model, we
+describe a common directory or public overlay which allows peers to provide
+services where peers can find friends and join overlays where there already
+exists an established relationship.  Each user has their own profile overlay,
+where the members of the overlay are limited to the current friends of the
+profile owner.  The profile overlay is secured by a public key infrastructure
+(PKI) with the profile owner being the certificate authority (CA).  The profile
+information is stored information is stored in distributed datastores, allowing
+profile information to be accessed in scalable mechanisms regardless of the
+profile owner's online state.
+
+The rest of this paper is organized as follows.  Section~\ref{background}
+provides background and related work.  Section~\ref{profile_overlay} and
+Section~\ref{directory_overlay} describe our contributions, namely, a
+private, profile overlay and a public, directory overlay.  We conclude the
+paper in Section~\ref{conclusion}.
+
+\section{Background}
+\label{background}
+In this section, we review structured P2P overlays and distributed and
+decentralized social network techniques.
+\subsection{Structured P2P Overlays}
+Structured P2P systems provide distributed lookup services with guaranteed
+search time with a lower bound of $O(\log N)$, in contrast to unstructured
+systems, which rely on global knowledge/broadcasts, or stochastic techniques
+such as random walks~\cite{unstructured_v_structured}.  Some examples of
+structured systems can be found in~\cite{pastry, chord, symphony, kademlia,
+can}.  In general, structured systems are able to make these guarantees by
+self-organizing a structured topology, such as a 2D ring or a hypercube.
+
+In the overlay, each node is given a unique node ID drawn from a large address
+space.  Each node id must be unique otherwise address collisions will occur,
+which can prevent nodes from participating in the overlay.  Furthermore, having
+the node IDs well distributed assist in providing better scalability as many
+shortcut selection algorithms depend on having node IDs uniformly distributed
+across the entire address space.  A simple mechanism to ensure this behavior is
+to have each node use a cryptographically strong random number generator to
+generate the node ID.  Another mechanism involves the use of a trusted third
+party to generate node IDs and cryptographically sign them~\cite{secure_routing}.
+
+As with all P2P systems, in order for an incoming node to connect with
+the overlay, the node must know of at least one active participant.  A list of
+nodes that are running on public addresses is typically distributed with the
+application, available through some out-of-band mechanism, or possibly using
+multicast to findpools~\cite{pastry}.
+
+In dealing with ring based overlays, a node must be connected to closest
+neighbors in the node ID address space; optimizations for fault tolerance
+suggest that it should be between 2 to $\log(N)$ on both sides.  Having
+multiple peers on both sides assist in stabilizing the overlay structure
+when experiencing churn, particularly when peers leave without warning.
+
+Overlay shortcuts enable efficient routing in ring-structured P2P systems.
+Different shortcut selection methods include: maintaining large tables without
+using connections and only verifying usability when routing
+messages~\cite{pastry, kademlia}, maintaining a connection with a peer every
+set distance in the P2P address space~\cite{chord}, or using locations drawn
+from a harmonic distribution in the node address space~\cite{symphony}.
+
+Most structured P2P overlays support decentralized storage/lookup of information by
+mapping keys to specific node IDs in an overlay.  At a minimum, the data is stored
+at the node ID either smaller or larger to the data's node ID and for fault
+tolerance the data can be stored at other nodes.  This sort of mapping
+and data storage is called a distributed hash table (DHT).
+
+In \cite{one_ring, randpeer, can_multicast}, the authors
+discuss the concept a single overlay supporting services by additional overlays
+that use the underlying overlay to assist in discovery.  In \cite{icdcs10}, we
+describe a reference implementation of a multiple overlay system that supports
+the use of a public overlay's DHT to store currently active peers in the private
+overlays.  Whereby users could create their own overlays without having to
+create their own bootstrap network.  In addition, our system provides both relay
+and hole-punching NAT traversal techniques and supports point-to-point PKI
+based security.
+
+\subsection{Social Networks}
+
+\section{The Directory Overlay}
+\label{directory_overlay}
+The directory overlay supports two features:  1) a directory for friend
+discovery and verification and 2) lists of peers currently active in each
+profile overlay.
+
+\subsection{Finding and Verifying Friends}
+\subsection{Active Peers}
+
+\section{The Profile Overlay}
+\label{profile_overlay}
+Each profile overlay resembles a private overlay as discussed in~\cite{icdcs10}.
+In this section, we focus on the tasks of controlling overlay membership, i.e.,
+handling friendships; distribution and retrieval of profile information; and
+private messaging.
+
+\subsection{Handling Friendships}
+\subsection{Storing and Retrieving Profile Data}
+\subsection{Private Messaging}
+
+\section{Conclusion}
+\label{conclusion}
+
+\bibliographystyle{abbrv}
+\small{
+\bibliography{iptps10}
+\suppressfloats
+}
+
+\end{document}
