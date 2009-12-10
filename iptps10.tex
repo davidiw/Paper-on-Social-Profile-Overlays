@@ -152,7 +152,9 @@ sending public and private messages, and sharing media.
 The rest of this paper is organized as follows.  Section~\ref{background}
 provides background and related work.  Section~\ref{social_overlays} describes
 our multioverlay approach, explaining how to map social networks onto structured
-P2P overlays.  We conclude the paper in Section~\ref{conclusion}.
+P2P overlays.  In Section~\ref{constraints}, we present constraints that our
+proposed system introduces and provide potential solutions.  We conclude the
+paper in Section~\ref{conclusion}.
 
 \section{Background}
 \label{background}
@@ -290,25 +292,68 @@ requesters request.  Once a user has received signed certificate, they may acces
 the remote peers profile overlay as discussed in~\ref{profile_overlay}, which is
 also responsible for activities such as revocation.
 
+Since a DHT is a soft-state system that uses leases to remove expired data, requests
+and responses must be occassionally reinserted into the DHT.  Alternatively
+approaches mentioned in~\cite{}, that suggest methods of storing data in overlays
+using quotas could be used to ensure fair usage of the overlay.
+
 \subsection{The Profile Overlay}
 \label{profile_overlay}
-Each profile overlay resembles a private overlay as discussed in~\cite{icdcs10}.
-In this section, we focus on the tasks of controlling overlay membership, i.e.,
-handling friendships; distribution and retrieval of profile information; and
-private messaging.
-\subsubsection{Handling Friendships}
-\subsubsection{Storing and Retrieving Profile Data}
-\subsubsection{Private Messaging}
+In a traditional social network, the profile or user-centric portion consists
+of a public message board for status updates or public messages, private
+messaging, data sharing, and maintenance of existing friendships.  In this
+section, we explain how these components can be applied to a structured overlay
+dedicated to an individual profile.
+
+The profile overlay consists of all the online friends of the profiler owner.
+For access control, we employ a PKI, where each member uses the signed certificate
+generated during the ``finding and verifying friends'' stage.  All links are
+encrypted using symmetric security algorithms established through the PKI.
+Thus preventing uninvited guests from gaining direct access to the overlay.
+Because the profile owner also is the CA for all members of the overlay, they
+can easily revoke users from the profile overlay with ease similar to a
+centralized social network.  In ~\cite{icdcs}, we presented a broadcast mechanism
+for immediately revoking peers from a system and we also suggest using a DHT based
+revocation list for indirect revocation.
+
+The message board of a profile can be stored in two ways, distributed via a
+data store as well as stored on the profile owners personal computing devices.
+While the distributed data store would provide the profile when the profile
+owner is offline, it also distributes the load for popular profiles.  Since
+reliability in a profile may be suspect, each peer should always be a provider
+for all data in their profile, when they are online.
+
+Similarly, private messages could be stored in this distributed data store,
+though since they are private, the message should be prepended by symmetric
+key used to encrypt the rest of the message.  the symmetric key should be
+encrypted with the profile owner's public key, so that they are the only party
+that can read the message.  Additionally, the body of the message encrypted
+should contain all relevant material such as the sender, time sent, subject,
+and the message itself.  If the messages are stored in a well known location,
+the profile owner can either poll the location or, alternatively, use an event
+based system to notify them of new messages.
+
+An ideal distributed data store would support database like access allowing
+to be stored chronologically and by type, i.e., media, status update, or public
+messages.  The distributed data store should be built on top of the profile
+overlay so that only members of the profile store the personal
+data of the user.  Since the material is public for the group and the groups
+links are all encrypted, the data could be distributed without encryption
+though all data should be signed so that each post has an identity attached to
+it.  Posts that lack this identity should be ignored when viewing the profile.
+Only the profile owner and owners of posts made on the message board should
+have the ability to delete the material.
 
 \subsection{Active Peers}
-The directory overlay can be used to assist in finding currently active peers in
-a private overlay.  If active peers place at a well known key in the DHT, that
-they are currently active and the node ID that they are currently using, then
-other peers can use the directory overlay to form bootstrapping connections to the
-profile overlay through them.  We have performed some evaluations on this concept
-of bootstrapping private overlays in~\cite{icdcs10}.  If malicious peers were to
-insert their ID into this list, it would be useless as the peer would only form
-connections with peers who also have a signed certificate for that profile.
+The directory overlay should be used to assist in finding currently active peers
+in the profile overlays.  By placing their node IDs at a well known though unique
+per profile overlay key in the DHT, active peers can bootstrap incoming peers
+into the profile overlay.  We implemented and evaluated this concept
+in~\cite{icdcs10}.  Because the profile overlay members all use PKI to ensure
+membership, even if malicious peers insert their ID into the active If malicious
+peers were to insert their ID into this list, it would be useless as the peer
+would only form connections with peers who also have a signed certificate for
+that profile.
 
 \section{Conclusion}
 \label{conclusion}
