@@ -26,8 +26,8 @@
 \setlength{\topmargin}{0pt}
 \setlength{\topsep}{0pt}
 \setlength{\partopsep}{0pt}
-\widowpenalty=10000
-\clubpenalty=10000
+%\widowpenalty=10000
+%\clubpenalty=10000
 %\setlength{\parskip}{0pt}
 %\setlength{\dbltextfloatsep}{.2cm}
 %\setlength{\dblfloatsep}{.2cm}
@@ -105,15 +105,24 @@ more dependent on social networks as users surrender tasks such as communication
 and identity to the social network.  Once information has been released to a
 social network, known as a user's profile, the user is at the mercy of the
 social network.  If the social network engages in activites disagreeable to the
-user, the user has the option to leave the social network surrendering their
-identity and features provided by the social network or to accept the
-disagreeable activities.
+user, such as recent issues with Facebook's Beacon program~\cite{facebook_beacon},
+the user has the option to leave the social network surrendering their identity
+and features provided by the social network, to accept the disagreeable
+activities, or to petition and hope that the social network changes its behavior.
+
+Recent work~\cite{p2p_socialnetwork} presents the coupling between social
+networks and P2P systems.  Noting that a social network made up of social
+links is inherently a P2P system with the aside that they are currently
+developed on top of centralized systems.  In this paper, we focus on the
+topic of topology, how the P2P system should be organized, by applying the
+social network to structured P2P overlays.  We then explain how the use of
+this topology enables reliability, security, and robustness.
 
 Structured P2P overlays provide a scalable, resilient, and self-managing
 platform for distributed applications.  Structured overlays provide means
 by which users can easily create their own decentralized systems for the
 purpose of data sharing, interactive activities, and other networking enabled
-activities.  In recent work~\ref{icdcs10}, we have implemented mechanisms that
+activities.  In recent work~\cite{icdcs10}, we have implemented mechanisms that
 allow users to create and manage their own private overlays using a common
 public overlay to assist in discovery and NAT traversing of the private overlay.
 In this paper, we further this work by an indepth discussion on how to apply
@@ -122,7 +131,7 @@ this technique to social networks.
 Social networks consist of users, each of whom typically has a a profile, a set
 of friends, and a private message inbox.  The profile contains the users
 personal information, status updates, and public conversation with the friends.
-Friends are individual which the user trust sufficiently to view the profile.
+Friends are individuals which the user trust sufficiently to view the profile.
 The private message inbox allows users to send messages between each other
 without leaking any information to other friends.  Using this model, we
 describe a common directory or public overlay which allows peers to provide
@@ -135,11 +144,15 @@ information is stored information is stored in distributed datastores, allowing
 profile information to be accessed in scalable mechanisms regardless of the
 profile owner's online state.
 
+Our proposed social network makes use of two types of overlays, a directory
+overlay and a profile overlay.  In this paper, we explain how these overlays
+provide key features of social networks:  finding and befriending peers,
+sending public and private messages, and sharing media.
+
 The rest of this paper is organized as follows.  Section~\ref{background}
-provides background and related work.  Section~\ref{profile_overlay} and
-Section~\ref{directory_overlay} describe our contributions, namely, a
-private, profile overlay and a public, directory overlay.  We conclude the
-paper in Section~\ref{conclusion}.
+provides background and related work.  Section~\ref{social_overlays} describes
+our multioverlay approach, explaining how to map social networks onto structured
+P2P overlays.  We conclude the paper in Section~\ref{conclusion}.
 
 \section{Background}
 \label{background}
@@ -201,25 +214,101 @@ based security.
 
 \subsection{Social Networks}
 
-\section{The Directory Overlay}
-\label{directory_overlay}
-The directory overlay supports two features:  1) a directory for friend
-discovery and verification and 2) lists of peers currently active in each
-profile overlay.
+\section{Social Overlays}
+\label{social_overlays}
+In this section we introduce the components of our multioverlay system,
+the public directory overlay and the private profile overlays.  A directory
+overlay supports two features:  1) a directory for friend discovery and
+verification and 2) lists of peers currently active in each profile overlay.
+A profile overlay supports the features of a profile, private messages, and
+media sharing.  In this section, we explain how to map social networking
+features to this multioverlay approach.  First we explain how peers find
+each other, then there interaction in the private overlay, and finally how
+they connect to the private overlay.
 
 \subsection{Finding and Verifying Friends}
-\subsection{Active Peers}
+In a traditional social network, a directory consists of many directory entries
+consisting of peer's public information, such as the user's name, user name,
+e-mail address, group affiliations, and friends.  A directory can be searched
+using this information to find one or more matching directory entries.  The user
+then makes a friendship request, which notifies the remote peer of this request.
+The request receiver can review the public information of the requestor prior to
+making a decision.  If the receiver accepts the request, the peers are given
+access to each other's profiles.  Whereupon, they can learn more information
+and if it turns out to be a mistake, the peers can unilaterally end the
+relationship.
 
-\section{The Profile Overlay}
+To map this to our proposed social overlay, the directory entries can be
+inserted into the DHT.  As discussed in previous work, the keys where the
+directory entries are stored at consist of a subset of the user's public
+information in lower-case format and hashed to an overlay  address.  The value
+stored at these keys is the user's certificate, which consists of its public
+information and an overlay address where the user expects to receive
+notifications.  The overlay address can be used for asynchronous offline
+messaging, whose function we will explain shortly.
+
+To bind public information to a certificate, we use a certificate of the format
+presented in Figure~\ref{fig:certificate}.  The main portion of the certificate is 
+similar to a self-signed x509~\cite{x509} certificate with public information
+such as user's name, user name, e-mail address, and group affiliations embeded
+into the certificate.  A friend list is represented by many friend entries, for
+this we employ a technique similar to PGP, user's can acquire from their friends
+a signed message consisting of a hash of the peers certificate, the time stamp,
+and the friend's certificate hash signed by the friend.  Since PGP does not
+provide a strong method for revocation the time stamp provides a slightly better
+means to decipher whether or not a friendship link is still active without
+accessing the public overlay of either peers.  Peers should request new friend
+list entry within a certain period of time or it will appear that the friendship
+is no longer valid.
+
+While looking for an individual, a peer may discover that many individuals have
+overlapping public information components, such as the user's name.  Assuming
+all entries are legitimate, the overlay must support inserting multiple values
+at the same key, leaving the peer or the peer's DHT client to parse the
+responses and determining the best match by reviewing the contents of each
+certificate.  Alternatively a technique like Sword~\cite{sword} support
+distributing the data across a set of nodes and using a bounded broadcast to
+discover peers that match all information used for searching.
+
+Upon discovering an individual with whom a peer would like a friendship, the
+peer will issue a friendship request.  As stated earlier, the data stored in
+the directory has an overlay address, where a peer expects friendship requests
+to be inserted into the DHT.  The friendship request consists of the self-signed
+certificate of the requesting peer, the public information of the request
+receiver, a time stamp, and a signature made from the private key associated with
+the self-signed certificate.  Though because DHTs are soft state systems having
+leases, the requester must reinsert the request upon timeout and no response for
+the receiver.
+
+Once a request has been inserted into the DHT, the receiver can come online and
+check for outstanding requests.  If the receiver would like to add the user, he
+may do so conditionally or unconditially.  An unconditional accept would cause
+the user to issue a request himself and also sign the request of the originating
+requester.  Alternatively in the case of a conditional accept, the user would
+issue a request, wait for a reply, and investigate prior to signing the originating
+requesters request.  Once a user has received signed certificate, they may access
+the remote peers profile overlay as discussed in~\ref{profile_overlay}, which is
+also responsible for activities such as revocation.
+
+\subsection{The Profile Overlay}
 \label{profile_overlay}
 Each profile overlay resembles a private overlay as discussed in~\cite{icdcs10}.
 In this section, we focus on the tasks of controlling overlay membership, i.e.,
 handling friendships; distribution and retrieval of profile information; and
 private messaging.
+\subsubsection{Handling Friendships}
+\subsubsection{Storing and Retrieving Profile Data}
+\subsubsection{Private Messaging}
 
-\subsection{Handling Friendships}
-\subsection{Storing and Retrieving Profile Data}
-\subsection{Private Messaging}
+\subsection{Active Peers}
+The directory overlay can be used to assist in finding currently active peers in
+a private overlay.  If active peers place at a well known key in the DHT, that
+they are currently active and the node ID that they are currently using, then
+other peers can use the directory overlay to form bootstrapping connections to the
+profile overlay through them.  We have performed some evaluations on this concept
+of bootstrapping private overlays in~\cite{icdcs10}.  If malicious peers were to
+insert their ID into this list, it would be useless as the peer would only form
+connections with peers who also have a signed certificate for that profile.
 
 \section{Conclusion}
 \label{conclusion}
