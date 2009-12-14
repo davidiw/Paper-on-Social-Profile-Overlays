@@ -202,7 +202,11 @@ Most structured P2P overlays support decentralized storage/lookup of information
 mapping keys to specific node IDs in an overlay.  At a minimum, the data is stored
 at the node ID either smaller or larger to the data's node ID and for fault
 tolerance the data can be stored at other nodes.  This sort of mapping
-and data storage is called a distributed hash table (DHT).
+and data storage is called a distributed hash table (DHT).  DHTs provide the
+building blocks to form more complex distributed data stores as presented in
+Past~\cite{past}.
+
+Other forms of distributed data stores include 
 
 In \cite{one_ring, randpeer, can_multicast}, the authors
 discuss the concept a single overlay supporting services by additional overlays
@@ -298,9 +302,9 @@ approaches mentioned in~\cite{}, that suggest methods of storing data in overlay
 using quotas could be used to ensure fair usage of the overlay.
 
 \subsection{The Profile Overlay}
-\label{profile_overlay}
-In a traditional social network, the profile or user-centric portion consists
-of a public message board for status updates or public messages, private
+\label{profile_overlay} In a traditional social network, the profile or
+user-centric portion consists of a public message board for status updates or
+public messages, private
 messaging, data sharing, and maintenance of existing friendships.  In this
 section, we explain how these components can be applied to a structured overlay
 dedicated to an individual profile.
@@ -333,16 +337,16 @@ and the message itself.  If the messages are stored in a well known location,
 the profile owner can either poll the location or, alternatively, use an event
 based system to notify them of new messages.
 
-An ideal distributed data store would support database like access allowing
-to be stored chronologically and by type, i.e., media, status update, or public
-messages.  The distributed data store should be built on top of the profile
-overlay so that only members of the profile store the personal
-data of the user.  Since the material is public for the group and the groups
-links are all encrypted, the data could be distributed without encryption
-though all data should be signed so that each post has an identity attached to
-it.  Posts that lack this identity should be ignored when viewing the profile.
-Only the profile owner and owners of posts made on the message board should
-have the ability to delete the material.
+An ideal distributed data store would support complex queries~\cite{complex_queries}
+thus allowing easy access to data stored chronologically, by content, or by type,
+i.e., media, status update, or public messages.  The distributed data store
+should be built on top of the profile overlay so that only members of the
+profile store the personal data of the user.  Since the material is public for
+the group and the groups links are all encrypted, the data could be distributed
+without encryption though all data should be signed so that each post has an
+identity attached to it.  Posts that lack this identity should be ignored when
+viewing the profile.  Only the profile owner and owners of posts made on the
+message board should have the ability to delete the material.
 
 \subsection{Active Peers}
 The directory overlay should be used to assist in finding currently active peers
@@ -357,6 +361,21 @@ that profile.
 
 \section{Conclusion}
 \label{conclusion}
+In this paper, we presented methods by which a social network can be
+decentralized through the use of structure P2P overlays.  Our system involves
+the use of multiple overlays where all users join a common public overlay and
+individual profile overlays.  The public overlay provides directory services
+that enable users to find and befriend other peers and bootstrap connections
+into the secure profile overlays.  Upon forming a friendship through the
+directory overlay, peers are given CA signed certificates that allow them to
+join each other's profile overlay.  The owner of the profile overlay acts as
+CA allowing the user to unilaterally revoke certificate, thus ending
+friendships with members of their overlay using efficient and reliable methods.
+For the purpose of storing profile information into the overlay, we cite
+previous work that can be used to provide distributed data services and give
+examples of how to store data securely in the overlay.  Our proposed system
+returns control of the social network and more importantly users' identity to
+the users and eliminates the need for centralized social networks.
 
 \bibliographystyle{abbrv}
 \small{
