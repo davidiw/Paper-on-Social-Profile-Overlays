@@ -77,6 +77,7 @@ University of Florida
 ]
 
 \subsection*{Abstract}
+% Use Online Social Networks instead of social networks
 Social networking has quickly become one of the most common activities of
 Internet users. As social networks evolve, they request more information from
 the users and thus requiring the users to place more trust into the social
@@ -143,6 +144,7 @@ profile owner.  The profile overlay is secured by a public key infrastructure
 information is stored information is stored in distributed datastores, allowing
 profile information to be accessed in scalable mechanisms regardless of the
 profile owner's online state.
+% Not sure about the above statement
 
 Our proposed social network makes use of two types of overlays, a directory
 overlay and a profile overlay.  In this paper, we explain how these overlays
@@ -214,7 +216,61 @@ create their own bootstrap network.  In addition, our system provides both relay
 and hole-punching NAT traversal techniques and supports point-to-point PKI
 based security.
 
-\subsection{Social Networks}
+\subsection{Peer-to-Peer Social Networks}
+The recent popularity and growing privacy issues of centralized online social networks 
+has motivated research projects aimed at providing private, peer-to-peer
+social networks~\cite{peerson, matryoshkas, tribler-osn, vis-a-vis}.
+In~\cite{peerson}, a DHT provides the lookup service for storing metadata 
+pertaining to a peer's profile. Peers query the DHT for updated content from 
+their friends by hashing their unique identifiers (e.g. friends' email addresses). 
+The retreived metadata contains information for obtaining the profile data such as
+IP address, file version, and so on. There is also assumption of a PKI system which
+is their basis for identification, encryption, and access control. In our
+approach, a private overlay is created for each peer and access control is
+based on admission to the private overlay. Once admitted to the private
+overlay of a particular peer, users can acess the overlay-specific DHT for 
+peer resources. Also all communication between peers are encrypted at the
+overlay level based on PKI-based certificate exchange amongst peers.
+
+\cite{vis-a-vis} takes a different approach by depending on virtual individual
+servers (VIS) hosted on a cloud infrastructure such as Amazon EC2. Friends contact
+each other's VIS directly for updates and uses a DHT only as a directory for
+groups, or interest-based searches. Their approach assumes bidirectional
+end-to-end connectivity between each VIS, which is a reasonable assumption if VIS 
+is hosted on a cloud infrastructure. If users decided to host their VIS on their personal
+machines, connectivity would become an issue. Our approach uses a public overlay
+which requires a subset of the nodes to be publicly Internet addressable. The
+public overlay then enables the construction of a private overlay by facilitating
+NAT traversal or relaying to ensure all-to-all connectivity between all nodes.
+
+The matryoshka approach presented in~\cite{matryoshka} also uses a DHT for
+looking up a peer's matryoshka (or circle of friends). Once a node in the 
+peer's outermost circle is found, that node is used to route profile requests to 
+the innermost circle which contains replicas of a peer's profile. This
+approach depends on the availability of a trusted identification service
+contacted through the DHT. This approach focuses on anonymity, access control,
+and availability. \cite{matryoshka}'s circle of friends concept
+is somewhat related to our idea of a private overlay. But in our overlay,
+the peer serves as the CA of its overlay, and a node can only join the
+overlay after the peer has provided it with a signed-certificate which binds
+the P2P address to the peer. Also, they do not deal with connectivity issues
+between nodes.
+
+All of the previous works relied on DHTs built on top of structured 
+peer-to-peer overlays. The peer-to-peer social network presented
+in~\cite{tribler-osn} is based on an unstructured social overlay
+and does not require a DHT. Peers connect to each other directly over IP
+without any overlay routing. Once peers are friends, they maintain
+unique identifiers of each to deal with dynamic IPs. Peers cache each
+other's data for availability through replication, and helper nodes
+are used to assist with communication between NATted peers. This
+approach did not talk about security or access control. We deal with
+both security and access control at the overlay layer with PKI based
+concepts. Overall, no previous work has looked into creating profile-specific
+overlays for users with the owner of the profile serving as the CA
+for its overlay. By limiting access and providing encryption at the overlay
+layer, users can leverage many existing structured overlay solutions without
+dealing with typical trusts issues of associated with peer-to-peer networks.
 
 \section{Social Overlays}
 \label{social_overlays}
