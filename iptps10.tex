@@ -85,10 +85,9 @@ Peer-to-peer (P2P) overlays provide an environment that can return ownership of
 information, trust, and control to the users, away from centralized third-party
 social networks.
 
-In this paper, we present a novel concept --- social profile overlays ---
+In this paper, we present a novel concept, social profile overlays,
 which enable users to share their profile only with trusted peers in a scalable,
-reliable, and private manner.
-Each user's profile consists
+reliable, and private manner.  Each user's profile consists
 of a unique private, secure overlay, where members of that overlay have a
 friendship with the overlay owner. Profile data is made available regardless of
 the state of the profile owner through the use of the profile overlay's
@@ -105,7 +104,7 @@ Online social networking has become pervasive in daily life, though as social
 networks grow so does the wealth of personal information that they store.  Once
 information has been released on a social network, known as a user's profile,
 the data and the user are at the mercy of the terms dictated by the social network 
-infrastructure, which today is typically a centralized provided.  If the social
+infrastructure, which today is typically third-party, centrally owned.  If the social
 network engages in activites disagreeable to the user, due to change of terms or opt-out programs not well understood by users such as recent issues
 with Facebook's Beacon program~\cite{facebook_beacon}, the options presented to the user are limited:
 to leave the social network (surrendering their identity and features provided
@@ -128,13 +127,13 @@ easily create their own decentralized systems for the purpose of data sharing,
 interactive activities, and other networking-enabled activities.  In recent
 work~\cite{icdcs10}, we have implemented mechanisms that allow users to create
 and manage their own private overlays using a common public overlay to assist
-in discovery and NAT traversal. This prior work is concerned with generic structured P2P
-private overlays; in this paper, we
+in discovery and NAT traversal. This prior work focuses on generic structured
+P2P private overlays; in this paper, we
 expand upon this approach with in-depth discussion on how to apply this technique to
 enable social network overlay profiles.
 
-Social networks consist of users, each of whom has a profile and a set
-of friends, and supports private messaging among peers.  The profile contains the user's
+Social networks consist of users, each of whom has a profile, a set
+of friends, and private messaging.  The profile contains the user's
 personal information, status updates, and public conversations.  Friends are
 individuals which the user trust sufficiently to view their profile.  Private
 messaging allows users to send messages between each other without leaking any
@@ -146,7 +145,8 @@ authority (CA).  The profile data is stored in the profile overlay's distributed
 datastore, allowing profile information to be accessed in scalable mechanisms
 regardless of the profile owner's online state.  In this paper, we present
 the architecture of these overlays and how they are used to find and befriend
-peers, and describe approaches to handling profile data and connecting to profile overlays.
+peers, and describe approaches to handling profile data, and establishing
+initial connections to profile overlays.
 
 The rest of this paper is organized as follows.  Section~\ref{background}
 provides background and related work.  Section~\ref{social_overlays} describes
