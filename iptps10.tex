@@ -78,60 +78,63 @@ University of Florida
 
 \subsection*{Abstract}
 % Use Online Social Networks instead of social networks
-Online social networking has quickly become one of Internet users most common
-activities. As social networks evolve, they request more information from users,
+Online social networking has quickly become one of the most common activities of Internet users.
+As social networks evolve, they encourage users to share more information,
 requiring the users, in turn, to place more trust into the social network.
 Peer-to-peer (P2P) overlays provide an environment that can return ownership of
-information, trust, and control to the users away from centralized third-party
+information, trust, and control to the users, away from centralized third-party
 social networks.
 
-In this paper, we present a novel concept known as the structured social profile
-overlays applying online social networks to structured P2P overlays to provide
-ownership, scalability, reliability, and security.  Each user's profile consists
+In this paper, we present a novel concept --- social profile overlays ---
+which enable users to share their profile only with trusted peers in a scalable,
+reliable, and private manner.
+Each user's profile consists
 of a unique private, secure overlay, where members of that overlay have a
 friendship with the overlay owner. Profile data is made available regardless of
-the state of the profile owner through the use of the profile overlays
-distributed data store.  Privacy and security is enforced through the use of a
-public key infrastructure, where the role of certificate authority (CA) is
-handled by the overlay owner and each member of the overlay has a CA signed
+the state of the profile owner through the use of the profile overlay's
+distributed data store.  Privacy and security are enforced through the use of a
+public key infrastructure (PKI), where the role of certificate authority (CA) is
+handled by the overlay owner and each member of the overlay has a CA-signed
 certificate.  To discover friends and bootstrap connections into the profile
 overlay, each member of the social network joins a common public or directory
 overlay.  We define interfaces and present tools that can be used to implement
-this system as well as explore some of the challenges related to it.
+this system, as well as explore some of the challenges related to it.
 
 \section{Introduction}
 Online social networking has become pervasive in daily life, though as social
 networks grow so does the wealth of personal information that they store.  Once
 information has been released on a social network, known as a user's profile,
-the data and the user are at the mercy of the social network.  If the social
-network engages in activites disagreeable to the user, such as recent issues
-with Facebook's Beacon program~\cite{facebook_beacon}, the user has the option
-to leave the social network surrendering their identity and features provided
-by the social network, to accept the disagreeable activities, or to petition
-and hope that the social network changes its behavior.
+the data and the user are at the mercy of the terms dictated by the social network 
+infrastructure, which today is typically a centralized provided.  If the social
+network engages in activites disagreeable to the user, due to change of terms or opt-out programs not well understood by users such as recent issues
+with Facebook's Beacon program~\cite{facebook_beacon}, the options presented to the user are limited:
+to leave the social network (surrendering their identity and features provided
+by the social network), to accept the disagreeable activities, or to petition
+and hope that the social network changes its behavior. 
 
 As the use of social networking expands to become the primary way in which users
 communicate and express their identity amongst their peers, the users become
-more dependent on the benevolence of social network owners.  Recent
+more dependent on the policies of social network infrastructure owners.  Recent
 work~\cite{p2p_socialnetwork} explores the coupling between social networks and
 P2P systems as a means to return ownership to the users, noting that a social
 network made up of social links is inherently a P2P system with the aside that
 they are currently developed on top of centralized systems.  In this paper, we
-extend this idea with focus on the topic of topology, that is, the organization
-of the P2P system through the use of structured P2P overlays.
+extend this idea with focus on the topic of topology; that is, how to self-organize
+social profiles that leverage the benefits offered by a structured P2P overlay abstraction.
 
 Structured P2P overlays provide a scalable, resilient, and self-managing
 platform for distributed applications.  Structured overlays enable users to
 easily create their own decentralized systems for the purpose of data sharing,
-interactive activities, and other networking enabled activities.  In recent
+interactive activities, and other networking-enabled activities.  In recent
 work~\cite{icdcs10}, we have implemented mechanisms that allow users to create
 and manage their own private overlays using a common public overlay to assist
-in discovery and NAT traversing of the private overlay.  In this paper, we
-further this work by an indepth discussion on how to apply this technique to
-social networks.
+in discovery and NAT traversal. This prior work is concerned with generic structured P2P
+private overlays; in this paper, we
+expand upon this approach with in-depth discussion on how to apply this technique to
+enable social network overlay profiles.
 
-Social networks consist of users, each of whom typically has a a profile, a set
-of friends, and supports private messaging.  The profile contains the users
+Social networks consist of users, each of whom has a profile and a set
+of friends, and supports private messaging among peers.  The profile contains the user's
 personal information, status updates, and public conversations.  Friends are
 individuals which the user trust sufficiently to view their profile.  Private
 messaging allows users to send messages between each other without leaking any
@@ -139,15 +142,15 @@ information to other friends.  Using this model, we describe how a common
 directory overlay can be used to provide services for finding friends and
 joining existing profile overlays.  Each user has their own profile overlay,
 secured via public key infrastructure (PKI) to which they are the certificate
-authority (CA).  The profile data is stored in the profile overlays distributed
+authority (CA).  The profile data is stored in the profile overlay's distributed
 datastore, allowing profile information to be accessed in scalable mechanisms
-regardless of the profile owner's online state.  In this paper, we will present
-the construction of these overlays and how they are used to find and befriend
-peers, the handling of profile data, and connecting to profile overlays.
+regardless of the profile owner's online state.  In this paper, we present
+the architecture of these overlays and how they are used to find and befriend
+peers, and describe approaches to handling profile data and connecting to profile overlays.
 
 The rest of this paper is organized as follows.  Section~\ref{background}
 provides background and related work.  Section~\ref{social_overlays} describes
-our multioverlay approach, explaining how to map social networks onto structured
+our multi-overlay approach, explaining how to map social networks onto structured
 P2P overlays.  In Section~\ref{outstanding}, we explore some of the remaining
 challenges confronted by our system.  We conclude the paper in
 Section~\ref{conclusion}.
