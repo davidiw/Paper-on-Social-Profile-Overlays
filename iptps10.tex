@@ -105,7 +105,8 @@ networks grow so does the wealth of personal information that they store.  Once
 information has been released on a social network, known as a user's profile,
 the data and the user are at the mercy of the terms dictated by the social network 
 infrastructure, which today is typically third-party, centrally owned.  If the social
-network engages in activites disagreeable to the user, due to change of terms or opt-out programs not well understood by users such as recent issues
+network engages in activites disagreeable to the user, due to change of terms or
+opt-out programs not well understood by users such as recent issues
 with Facebook's Beacon program~\cite{facebook_beacon}, the options presented to the user are limited:
 to leave the social network (surrendering their identity and features provided
 by the social network), to accept the disagreeable activities, or to petition
@@ -144,9 +145,21 @@ secured via public key infrastructure (PKI) to which they are the certificate
 authority (CA).  The profile data is stored in the profile overlay's distributed
 datastore, allowing profile information to be accessed in scalable mechanisms
 regardless of the profile owner's online state.  In this paper, we present
-the architecture of these overlays and how they are used to find and befriend
-peers, and describe approaches to handling profile data, and establishing
-initial connections to profile overlays.
+the architecture of these overlays as presented in Figure~\ref{fig:system} and
+how they are used to find and befriend peers, and describe approaches to
+handling profile data, and establishing initial connections to profile overlays.
+
+\begin{figure}[ht]
+\centering
+\epsfig{file=figs/subrings.eps, width=3.12in}
+\caption{An example social overlay network.  Alice has a friendship with Bob and
+Carol and thus both are members of her profile overlay.  While Bob has a 
+friendship with Alice and Dave but not Carol, thus Alice and Dave but not Carol
+are members of his profile overlay.  Each peer has many overlay memberships
+but a single root, this relationship is represented by dashed lines in various
+shades of grey.  For clarity, overlay shortcut connections are not shown.}
+\label{fig:system}
+\end{figure}
 
 The rest of this paper is organized as follows.  Section~\ref{background}
 provides background and related work.  Section~\ref{social_overlays} describes
@@ -316,7 +329,6 @@ is no longer valid.
 \caption{An example certificate for use in our proposed system.}
 \label{fig:certificate}
 \end{figure}
-
 
 While looking for an individual, a peer may discover that many individuals have
 overlapping public information components, such as the user's name.  Assuming
