@@ -228,7 +228,9 @@ the use of a public overlay's DHT to store currently active peers in the private
 overlays. The system allows users to create their own private overlays without
 having to create their own bootstrap network.  During evaluation, it was made
 clear that the cost of this approach was small and grew logarithmically with
-network size.  In addition, our system provides both relay-based
+network size.  The maximum sized system tested, 100,000 public and private
+overlay nodes, had a single node join in less than 45 seconds with security
+enabled in the private overlay.  In addition, our system provides both relay-based
 and hole-punching NAT traversal techniques and supports point-to-point PKI
 based security, forming a basis for the approach presented in this paper.
 
