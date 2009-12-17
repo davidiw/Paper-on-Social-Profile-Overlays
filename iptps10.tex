@@ -16,9 +16,9 @@
 \usepackage{amsmath}
 
 \usepackage[compact]{titlesec}
-\titlespacing{\section}{0pt}{*.5}{*.5}
-\titlespacing{\subsection}{0pt}{*.5}{*.5}
-\titlespacing{\subsubsection}{0pt}{*.5}{*.5}
+\titlespacing{\section}{0pt}{*.45}{*.45}
+\titlespacing{\subsection}{0pt}{*.45}{*.45}
+\titlespacing{\subsubsection}{0pt}{*.45}{*.45}
 \setlength{\parskip}{0pt}
 \setlength{\parsep}{0pt}
 \setlength{\headsep}{0pt}
@@ -178,7 +178,7 @@ search time with a lower bound of $O(\log N)$, in contrast to unstructured
 systems, which rely on global knowledge/broadcasts, or stochastic techniques
 such as random walks~\cite{unstructured_v_structured}.  Some examples of
 structured systems can be found in~\cite{pastry, chord, symphony, kademlia,
-can}.  In general, structured systems are able to make these guarantees by
+can, dynamo}.  In general, structured systems are able to make these guarantees by
 self-organizing a structured topology, such as a 2D ring or a hypercube.
 
 In the overlay, each node is given a unique node ID drawn from a large address
@@ -218,9 +218,9 @@ at the node ID either smaller or larger to the data's node ID and for fault
 tolerance the data can be stored at other nodes.  This sort of mapping
 and data storage is called a distributed hash table (DHT).  DHTs provide the
 building blocks to form more complex distributed data stores as presented in
-Past~\cite{past}.
+Past~\cite{past} and Kosha~\cite{kosha}.
 
-In \cite{one_ring, randpeer, can_multicast}, the authors discuss the concept a
+In \cite{one_ring, can_multicast}, the authors discuss the concept a
 single overlay supporting services through the use of additional overlays
 that use the underlying overlay to assist in discovery.  In \cite{icdcs10}, we
 describe a reference implementation of a multiple overlay system that supports
@@ -393,7 +393,10 @@ higher availability, each peer should always be a provider for all data in their
 profile when they are online.  To ensure authenticity and integrity, all peers
 should sign their messages and each peers certificate should be available in
 the overlay for verification.  Messages that are unsigned should be ignored
-by all members of the overlay.
+by all members of the overlay.  An ideal overlay for this purpose should
+support complex queries~\cite{complex_queries} allowing easy access to data
+stored chronologically, by content, bo byte type, i.e., media, status updates,
+or message board discussions.
 
 Private messaging in the profile overlay is unidirectional meaning that only
 the profile owner can receive private messages using their overlay.  To
@@ -406,17 +409,6 @@ message should include the sender, time sent, and the subject.  Messages can
 be stored in well known locations, so that the profile owner can either poll
 the location or, alternatively, use an event based system to notify them of
 the new message.
-
-An ideal distributed data store should support complex queries~\cite{complex_queries}
-thus allowing easy access to data stored chronologically, by content, or by type,
-i.e., media, status update, or public messages.  The distributed data store
-should be built on top of the profile overlay so that only members of the
-profile store the personal data of the user.  Since the material is public for
-the group and the groups links are all encrypted, the data could be distributed
-without encryption though all data should be signed so that each post has an
-identity attached to it.  Posts that lack this identity should be ignored when
-viewing the profile.  Only the profile owner and owners of posts made on the
-message board should have the ability to delete the material.
 
 \subsection{Active Peers}
 The directory overlay should be used to assist in finding currently active peers
