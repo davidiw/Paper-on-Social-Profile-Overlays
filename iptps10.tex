@@ -317,7 +317,7 @@ The main portion of the certificate is similar to a self-signed
 x509~\cite{x509} certificate with public information such as user's name, e-mail
 address, and group affiliations embeded into the certificate.  At the tail of
 the certificate is a friend list represented by many friend entries.  To do this
-we propose employing a technique similar to PGP: users can acquire from their
+we propose employing a technique similar to PGP~\cite{pgp}: users can acquire from their
 friends a signed message consisting of a hash of the peer's certificate, the
 time stamp, and the friend's certificate hash signed by the friend.  Since PGP
 does not provide a strong method for revocation, the time stamp provides
@@ -390,7 +390,10 @@ profile overlay via a data store or stored on the profile owner's personal
 computing devices.  The distributed data store provide the profile when the
 owner is offline and also distributes the load for popular profiles.  For
 higher availability, each peer should always be a provider for all data in their
-profile when they are online.
+profile when they are online.  To ensure authenticity and integrity, all peers
+should sign their messages and each peers certificate should be available in
+the overlay for verification.  Messages that are unsigned should be ignored
+by all members of the overlay.
 
 Private messaging in the profile overlay is unidirectional meaning that only
 the profile owner can receive private messages using their overlay.  To
@@ -443,23 +446,23 @@ of user owned systems and contributes to the reliability of the social overlay.
 {\bf 2) Overlay support for low bandwidth, unconnected devices} - devices such as
 smart phones cannot constantly be actively connected to the overlay and the
 connection time necessary to retrieve something like a phone number may be
-too much to make this approach unuseful.  Like the churn in the system,
+too much to make this approach unuseful.  Similar to the previous challenge,
 this approach could benefit from having shared common, centralized resource
-that lets users access their social overlays by proxy without connecting
-their device directly to the overlay network.
+enabling users access to their social overlays by proxy without establishing a
+direct connection to the overlay network.
 
 {\bf 3) Reliability of the directory and profile overlay} - All overlays are
 susceptible to attacks that can nullify the usefulness of the overlay.  While
 the profile overlay does have point-to-point security it can be very difficult
 to reclaim an overlay if there are enough malicious users.  In a public overlay
 without some form of centralization, policing the system becomes a very
-complicated procedure.  Previous work has researched methods to keep overlays
-working smoothly even while under attack.  For the social overlay to be
-successful, we must identify which methods should be used.
+complicated procedure.  Previous work has proposed methods to ensure the usability
+of overlays even while under attack.  For the social overlay to be successful,
+we must identify which methods should be used.
 
 \section{Conclusion}
 \label{conclusion}
-In this paper, we presented methods by which a social network can be
+In this paper, we proposed methods by which a social network can be
 decentralized through the use of structure P2P overlays.  Our system involves
 the use of multiple overlays where all users join a common public overlay and
 individual profile overlays.  The public overlay provides directory services
@@ -476,7 +479,7 @@ returns control of the social network and more importantly users' identity to
 the users and eliminates the need for centralized social networks.
 
 \bibliographystyle{abbrv}
-\small{
+\footnotesize{
 \bibliography{iptps10}
 \suppressfloats
 }
