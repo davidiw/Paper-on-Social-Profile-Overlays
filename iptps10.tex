@@ -16,7 +16,7 @@
 \usepackage{amsmath}
 
 \usepackage[compact]{titlesec}
-\titlespacing{\section}{0pt}{*.45}{*.45}
+\titlespacing{\section}{0pt}{*.2}{*.2}
 \titlespacing{\subsection}{0pt}{*.45}{*.45}
 \titlespacing{\subsubsection}{0pt}{*.45}{*.45}
 \setlength{\parskip}{0pt}
@@ -149,7 +149,7 @@ the architecture of these overlays as presented in Figure~\ref{fig:system} and
 how they are used to find and befriend peers, and describe approaches to
 handling profile data, and establishing initial connections to profile overlays.
 
-\begin{figure}[ht]
+\begin{figure}[h]
 \centering
 \epsfig{file=figs/subrings.eps, width=3.12in}
 \caption{An example social overlay network.  Alice has a friendship with Bob and
@@ -170,8 +170,8 @@ Section~\ref{conclusion}.
 
 \section{Background}
 \label{background}
-In this section, we review structured P2P overlays and distributed and
-decentralized online social network techniques.
+In this section, we review structured P2P overlays and distributed,
+decentralized online social network approaches.
 \subsection{Structured P2P Overlays}
 Structured P2P systems provide distributed lookup services with guaranteed
 search time with a lower bound of $O(\log N)$, in contrast to unstructured
@@ -226,13 +226,21 @@ that use the underlying overlay to assist in discovery.  In \cite{icdcs10}, we
 describe a reference implementation of a multiple overlay system that supports
 the use of a public overlay's DHT to store currently active peers in the private
 overlays. The system allows users to create their own private overlays without
-having to create their own bootstrap network.  During evaluation, it was made
-clear that the cost of this approach was small and grew logarithmically with
-network size.  The maximum sized system tested, 100,000 public and private
-overlay nodes, had a single node join in less than 45 seconds with security
-enabled in the private overlay.  In addition, our system provides both relay-based
-and hole-punching NAT traversal techniques and supports point-to-point PKI
-based security, forming a basis for the approach presented in this paper.
+having to create their own bootstrap network.  During evaluation, using both
+simulated and real systems, we saw that the time for one node to join a public
+and thereafter private overlay was small and grew logarithmically with network
+sizes.  The real system was tested using a public overlay of 600 nodes and any
+where from 1 to 600 peers in the private overlay using security, the time to
+connect was always less than 22 seconds.    In simulations, we tested public
+and private overlays varying from 1,000 to 100,000 peers.  For 1,000 public
+overlay peers, regardless of the private overlay size though with security enabled,
+connected within 22 seconds.  The 100,000 peer system, regardless of the private
+overlay size though with security enabled, connected in less than 48 seconds.  
+
+In addition, our system provides both relay-based and hole-punching NAT
+traversal~\cite{nsdi10} techniques and supports point-to-point
+PKI based security~\cite{icdcs10}, forming a basis for the approach
+presented in this paper.
 
 \subsection{Peer-to-Peer Social Networks}
 The recent popularity and growing privacy issues of centralized online social
@@ -259,7 +267,7 @@ end-to-end connectivity between each VIS, where a profile is only available
 during the uptime of the VIS.  Because of the demands on network connectivity
 and uptime, the approach assumes a cloud-hosted VIS and has difficulty being used on user-owned resources.
 Our approach enables users to avoid the need for all-to-all connectivity and
-constant uptime through the use of extensive NAT traversal support and the
+constant uptime through the use of NAT traversal support and the
 ability to store the profile in the overlay's distributed data store.
 
 The matryoshka approach presented in~\cite{matryoshka} also uses a DHT for
@@ -274,7 +282,7 @@ also enables the profile owner to serve as a CA, ensuring that nodes can only
 access a profile overlay after having obtained a signed certificate.
 
 Unlike the above approaches, the P2P social network presented in~\cite{tribler-osn}
-is based upon unstructured social overlays and does not require a DHT.  Peers
+uses an unstructured overlay and does not require a DHT.  Peers
 connect to each other directly over IP without any overlay routing. Once peers
 are friends, they maintain unique identifiers to deal with dynamic IPs.  Peers
 cache each other's data for availability through replication, and helper nodes
@@ -284,14 +292,12 @@ guarantees and the simplicity of the abstraction offered by a structured overlay
 
 \section{Social Overlays}
 \label{social_overlays}
-In this section we introduce the main components of our multi-overlay system:
-a public directory overlay with many private profile overlays.  A directory
-overlay supports two features:  1) a directory for friend discovery and
-verification and 2) lists of peers currently active in each profile overlay.
-Each profile overlay supports public message board, private messages, and
-media sharing.  In this section, we explain how to map online social networking
-features to this multi-overlay approach.  We explain how peers find each other,
-use of the profile overlay, and connect to the private overlay.
+In this section, we explain how to map online social networking to our
+multi-overlay social network consisting of a public directory overlay with many
+private profile overlays.  The directory overlay supports friend discovery and
+verification and stores a lists of peers currently active in each profile
+overlay.  Profile overlays support message boards, private messages, and media
+sharing.
 
 \subsection{Finding and Verifying Friends}
 In a traditional social network, a directory provides users the ability to search
@@ -351,7 +357,7 @@ self-signed certificate.
 
 Within a reasonable amount of time after a request has been inserted into the
 DHT, the receiver can come online and check for outstanding requests.  If the
-receiver would like to add the user, he or she may do so conditionally or
+receiver would like to add the user, they may do so conditionally or
 unconditially.  During an unconditional accept, the peer signs the request of the
 originating requester and issues a request to befriend the origatoing requester.
 Alternatively in the case of a conditional accept, the user issues a friendship
