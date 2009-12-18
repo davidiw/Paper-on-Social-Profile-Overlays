@@ -224,21 +224,19 @@ Past~\cite{past} and Kosha~\cite{kosha}.
 In \cite{one_ring, can_multicast}, the authors discuss the concept a
 single overlay supporting services through the use of additional overlays
 that use the underlying overlay to assist in discovery.  In \cite{icdcs10}, we
-presented a reference implementation of a multiple overlay system that supports
+presented a reference implementation of a multiple-overlay system that supports
 the use of a public overlay's DHT to store currently active peers in the private
 overlays. The system allows users to create their own private overlays without
 having to create their own bootstrap network.  During evaluation, using both
-simulated and real systems, we saw that the time for a single peer to join a public
-and thereafter private overlay was small and grew logarithmically with network
-sizes.  The real system was tested using a public overlay of 600 nodes and any
-where from 1 to 600 peers in the private overlay using security, the time to
-connect was always less than 22 seconds.    In simulations, we tested public
-and private overlays varying from 1,000 to 100,000 peers.  For 1,000 public
-overlay peers, regardless of the private overlay size though with security enabled,
-connected within 22 seconds.  The 100,000 peer system, regardless of the private
-overlay size though with security enabled, connected in less than 48 seconds.  
-In relation to this paper, these results can be interpreted to mean the time
-required for a single peer to being completely disconnected from the social network
+simulated and real systems, we saw that the time for a single peer to join first the public
+and thereafter private overlays was small and grew logarithmically with network
+sizes.  The system was tested using a public overlay of 600 nodes on PlanetLab and a random distribution of number of peers in the private overlay.
+With point-to-point security links enabled in the private overlay, the time to
+connect was less than 22 seconds for all peers. In simulation analysis, we were able to evaluate public
+and private overlays consisting of up to 100,000 peers.  For the 100,000-peer simulated system, regardless of the private
+overlay size and with security enabled, peers were able to connect to their private overlays in less than 48 seconds.  
+In relation to this paper, these results can be interpreted to mean the latency
+required for a single peer to from being completely disconnected from the social network
 to being fully connected to the directory and all profile overlays.
 
 In addition, our system provides both relay-based and hole-punching NAT
@@ -436,17 +434,20 @@ have a signed certificate for that profile.
 
 \section{Challenges}
 \label{outstanding}
-The following list consists of the issues that need further addressing, though
-list is not exhaustive:
+While structured P2P overlays have been well-studied in a variety of applications,
+their use in social profile overlays raises new interesting questions, including:
 
-{\bf 1) Handling small overlay networks} - Most research into overlay focuses on
-networks larger than the typical user's friend count, the average on Facebook
-is 125.  This comes up with regards to the reliability of the overlay as the
-system may potentially be under constant churn.  This is why it is critical
-that a user host their own profile, but what happens if the user is disconnected
-churn is so significant that a profile cannot be maintained in the overlay?
-This is where a VIS may be useful, providing a dedicated hosting for a user's
-social profile.
+{\bf 1) Handling small overlay networks} - P2P overlay research typically focuses on
+networks larger than the typical user's friend count (the average on Facebook
+is 125).  Because social profile overlays are comparatively smaller, this can
+impact the reliability of the overlay and availability of profile data as the
+system may potentially be under constant churn. A user can host their
+own profile, however when the user is disconnected it is important that their
+profile remains available even under churn. It is thus important to characterize churn
+in this application to understand how to best approach this proble. Providing the option
+of per-user deployment of a virtual individual server (VIS) and the use of replication 
+schemes aware of a user's resources is one possible direction to address this issue.
+
 
 {\bf 2) Overlay support for low bandwidth, unconnected devices} - devices such as
 smart phones cannot constantly be actively connected to the overlay and the
@@ -457,17 +458,19 @@ social overlays by proxy without establishing a direct connection to the overlay
 network.
 
 {\bf 3) Reliability of the directory and profile overlay} - Overlays are
-susceptible to attacks that can nullify the usefulness of the overlay.  While
-the profile overlay does have point-to-point security it can be very difficult
-to reclaim an overlay if it contains enough enough malicious users.  In the public,
+susceptible to attacks that can nullify their usefulness.  While
+the profile overlay does have point-to-point security, in the public,
 directory overlay, the lack of any form centralization makes policing the system
 a complicated procedure.  While our approach of appending friends list can assist
-users in making decisions on identity it does not protect against denial of
+users in making decisions on identity, it does not protect against denial of
 service attacks.  One such attack would be for users to attempt to create many
 similar identities overwhelming a user in their attempt to find a specific peer.
 Previous work has proposed methods to ensure the usability of overlays even
 while under attack.  For the social overlay to be successful, we must identify
-which methods should be used.
+which methods should be used. One possible approach is to replicate public
+information within a user's profile overlay, and use common peers as proxies to assist 
+in the discovery of friends by querying the private profile overlays they are
+connected to.
 
 \section{Conclusion}
 \label{conclusion}
