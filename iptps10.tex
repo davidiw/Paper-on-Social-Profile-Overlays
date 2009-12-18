@@ -16,7 +16,7 @@
 \usepackage{amsmath}
 
 \usepackage[compact]{titlesec}
-\titlespacing{\section}{0pt}{*.2}{*.2}
+\titlespacing{\section}{0pt}{*.45}{*.45}
 \titlespacing{\subsection}{0pt}{*.45}{*.45}
 \titlespacing{\subsubsection}{0pt}{*.45}{*.45}
 \setlength{\parskip}{0pt}
@@ -26,6 +26,7 @@
 \setlength{\topmargin}{0pt}
 \setlength{\topsep}{0pt}
 \setlength{\partopsep}{0pt}
+\linespread{0.98}
 %\widowpenalty=10000
 %\clubpenalty=10000
 %\setlength{\parskip}{0pt}
@@ -136,16 +137,16 @@ enable social network overlay profiles.
 Social networks consist of users, each of whom has a profile, a set
 of friends, and private messaging.  The profile contains the user's
 personal information, status updates, and public conversations, similar to a
-message board.  Friends are
-individuals which the user trusts sufficiently to view their profile.  Private
-messaging allows users to send messages between each other without leaking any
+message board.  Friends are individuals trusted sufficiently by a user to view
+the user's profile.  Private
+messaging enables sending discrete messages between users without leaking any
 information to other members of the social network.  Using this model, we describe how a common
 directory overlay can be used to provide services for finding friends and
-joining existing profile overlays.  Each user has their own profile overlay,
+joining existing profile overlays.  Users have their own profile overlay,
 secured via public key infrastructure (PKI) to which they are the certificate
 authority (CA).  The profile data is stored in the profile overlay's distributed
 data store, allowing profile information to be accessed in scalable mechanisms
-regardless of the profile owner's online state.  In this paper, we present
+regardless of the profile owner's online status.  In this paper, we present
 the architecture of these overlays as presented in Figure~\ref{fig:system} and
 how they are used to find and befriend peers, and describe approaches to
 handling profile data, and establishing initial connections to profile overlays.
@@ -228,14 +229,16 @@ presented a reference implementation of a multiple-overlay system that supports
 the use of a public overlay's DHT to store currently active peers in the private
 overlays. The system allows users to create their own private overlays without
 having to create their own bootstrap network.  During evaluation, using both
-simulated and real systems, we saw that the time for a single peer to join first the public
+simulated and real systems, the time for a single peer to join first the public
 and thereafter private overlays was small and grew logarithmically with network
-sizes.  The system was tested using a public overlay of 600 nodes on PlanetLab and a random distribution of number of peers in the private overlay.
-With point-to-point security links enabled in the private overlay, the time to
-connect was less than 22 seconds for all peers. In simulation analysis, we were able to evaluate public
-and private overlays consisting of up to 100,000 peers.  For the 100,000-peer simulated system, regardless of the private
-overlay size and with security enabled, peers were able to connect to their private overlays in less than 48 seconds.  
-In relation to this paper, these results can be interpreted to mean the latency
+sizes.  The real system was tested using a public overlay of 600 nodes on
+PlanetLab and a random distribution of peers in the private overlay.  With
+point-to-point security links enabled in the private overlay, the time to
+connect was less than 22 seconds for all cases. In simulations, overlays with as
+many as 100,000 peers were evaluated.  For the 100,000-peer overlay, regardless
+of the private overlay size and with security enabled, peers were able to connect
+to their private overlays in less than 48 seconds.  
+In relation to this paper, these results can be interpreted such that the latency
 required for a single peer to from being completely disconnected from the social network
 to being fully connected to the directory and all profile overlays.
 
@@ -281,8 +284,7 @@ circle of friends concept lacks the simplicity of the abstraction made in our
 approach, whereby a variety of existing structured overlay techniques can be used as a profile
 overlay without concern over innermost and outermost circles.  Our approach
 also enables the profile owner to serve as a CA, ensuring that nodes can only
-access a profile overlay after having obtained a signed certificate.
-
+access a profile overlay after having obtained a signed certificate.  
 Unlike the above approaches, the P2P social network presented in~\cite{tribler-osn}
 uses an unstructured overlay and does not require a DHT.  Peers
 connect to each other directly over IP without any overlay routing. Once peers
@@ -325,10 +327,10 @@ messaging, whose function we will explain shortly.
 Because the users need a way to verify each other that involves social credentials,
 we propose the use of a new form of certificate.
 The main portion of the certificate is similar to a self-signed
-x509 certificate with public information such as user's name, e-mail
+x509~\cite{x509} certificate with public information such as user's name, e-mail
 address, and group affiliations embedded into the certificate.  At the tail of
 the certificate is a friend list represented by many friend entries.  To do this
-we propose employing a technique similar to PGP: users can acquire from their
+we propose employing a technique similar to PGP~\cite{pgp}: users can acquire from their
 friends a signed message consisting of a hash of the peer's certificate, the
 time stamp, and the friend's certificate hash signed by the friend.  Since PGP
 does not provide a strong method for revocation, the time stamp provides
@@ -379,7 +381,7 @@ revocation.
 \subsection{The Profile Overlay}
 \label{profile_overlay}
 In a traditional social network, the profile or user-centric portion consists
-of private messaging, data sharing, maintenance of existing friendships, and a
+of private messaging, data sharing, friendship maintenance, and a
 public message board for status updates or public messages.  In this
 section, we explain how these components can be applied to a structured overlay
 dedicated to an individual profile.
@@ -407,7 +409,7 @@ should sign their messages and each peer's certificate should be available in
 the overlay for verification.  Messages that are unsigned should be ignored
 by all members of the overlay.  An ideal overlay for this purpose should
 support complex queries~\cite{complex_queries} allowing easy access to data
-stored chronologically, by content, by byte type, i.e., media, status updates,
+stored chronologically, by content, by type, i.e., media, status updates,
 or message board discussions.
 
 Private messaging in the profile overlay is unidirectional meaning that only
@@ -430,7 +432,7 @@ into the profile overlay.  We implemented and evaluated this concept
 in~\cite{icdcs10}.  Because the profile overlay members all use PKI to ensure
 membership, even if malicious peers insert their ID into the active list, it
 would be useless as the peer would only form connections with peers who also
-have a signed certificate for that profile.
+have a signed certificate.
 
 \section{Challenges}
 \label{outstanding}
@@ -440,14 +442,13 @@ their use in social profile overlays raises new interesting questions, including
 {\bf 1) Handling small overlay networks} - P2P overlay research typically focuses on
 networks larger than the typical user's friend count (the average on Facebook
 is 125).  Because social profile overlays are comparatively smaller, this can
-impact the reliability of the overlay and availability of profile data as the
-system may potentially be under constant churn. A user can host their
-own profile, however when the user is disconnected it is important that their
-profile remains available even under churn. It is thus important to characterize churn
-in this application to understand how to best approach this proble. Providing the option
-of per-user deployment of a virtual individual server (VIS) and the use of replication 
-schemes aware of a user's resources is one possible direction to address this issue.
-
+impact the reliability of the overlay and availability of profile data.  A user
+can host their own profile; however when the user is disconnected it is important
+that their profile remains available even under churn. It is thus important to
+characterize churn in this application to understand how to best approach this
+problem. An optional of per-user deployment of a virtual individual server (VIS)
+and the use of replication schemes aware of a user's resources provide possible
+directions to address this issue.
 
 {\bf 2) Overlay support for low bandwidth, unconnected devices} - devices such as
 smart phones cannot constantly be actively connected to the overlay and the
@@ -467,10 +468,9 @@ service attacks.  One such attack would be for users to attempt to create many
 similar identities overwhelming a user in their attempt to find a specific peer.
 Previous work has proposed methods to ensure the usability of overlays even
 while under attack.  For the social overlay to be successful, we must identify
-which methods should be used. One possible approach is to replicate public
-information within a user's profile overlay, and use common peers as proxies to assist 
-in the discovery of friends by querying the private profile overlays they are
-connected to.
+which methods should be used. A possible approach is to replicate public
+information within a user's profile overlay thus providing an alternative
+directory overlay for querying prior to using the public directory overlay.
 
 \section{Conclusion}
 \label{conclusion}
