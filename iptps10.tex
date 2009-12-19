@@ -16,9 +16,9 @@
 \usepackage{amsmath}
 
 \usepackage[compact]{titlesec}
-\titlespacing{\section}{0pt}{*.45}{*.45}
-\titlespacing{\subsection}{0pt}{*.45}{*.45}
-\titlespacing{\subsubsection}{0pt}{*.45}{*.45}
+\titlespacing{\section}{0pt}{*}{*}
+\titlespacing{\subsection}{0pt}{*}{*}
+\titlespacing{\subsubsection}{0pt}{*}{*}
 \setlength{\parskip}{0pt}
 \setlength{\parsep}{0pt}
 \setlength{\headsep}{0pt}
@@ -26,7 +26,7 @@
 \setlength{\topmargin}{0pt}
 \setlength{\topsep}{0pt}
 \setlength{\partopsep}{0pt}
-\linespread{0.98}
+%\linespread{0.97}
 %\widowpenalty=10000
 %\clubpenalty=10000
 %\setlength{\parskip}{0pt}
@@ -134,22 +134,22 @@ P2P private overlays; in this paper, we
 expand upon this approach with in-depth discussion on how to apply this technique to
 enable social network overlay profiles.
 
-Social networks consist of users, each of whom has a profile, a set
-of friends, and private messaging.  The profile contains the user's
+Social networks consist of users, each has a profile, a set
+of friends, and private messaging.  The profile contains user's
 personal information, status updates, and public conversations, similar to a
 message board.  Friends are individuals trusted sufficiently by a user to view
 the user's profile.  Private
-messaging enables sending discrete messages between users without leaking any
-information to other members of the social network.  Using this model, we describe how a common
-directory overlay can be used to provide services for finding friends and
-joining existing profile overlays.  Users have their own profile overlay,
-secured via public key infrastructure (PKI) to which they are the certificate
-authority (CA).  The profile data is stored in the profile overlay's distributed
-data store, allowing profile information to be accessed in scalable mechanisms
+messaging enables sending messages discretely between users without leaking the
+message to other members.  Using this model, we describe how a public 
+overlay can be used as a directory for finding friends and
+joining existing profile overlays.  Each user has their own profile overlay,
+secured via a public key infrastructure (PKI) to which they are the certificate
+authority (CA).  The profile overlay stores profile data in its distributed
+data store, supporting profile access in scalable mechanisms
 regardless of the profile owner's online status.  In this paper, we present
-the architecture of these overlays as presented in Figure~\ref{fig:system} and
+the architecture of these overlays, as presented in Figure~\ref{fig:system}, and
 how they are used to find and befriend peers, and describe approaches to
-handling profile data, and establishing initial connections to profile overlays.
+handling profile data and establishing initial connections to profile overlays.
 
 \begin{figure}[h]
 \centering
@@ -167,7 +167,7 @@ The rest of this paper is organized as follows.  Section~\ref{background}
 provides background and related work.  Section~\ref{social_overlays} describes
 our multi-overlay approach, explaining how to map social networks onto structured
 P2P overlays.  In Section~\ref{outstanding}, we explore some of the remaining
-challenges confronted by our system.  We conclude the paper in
+challenges introduced by our approach.  We conclude the paper in
 Section~\ref{conclusion}.
 
 \section{Background}
@@ -222,9 +222,9 @@ and data storage is called a distributed hash table (DHT).  DHTs provide the
 building blocks to form more complex distributed data stores as presented in
 Past~\cite{past} and Kosha~\cite{kosha}.
 
-In \cite{one_ring, can_multicast}, the authors discuss the concept a
-single overlay supporting services through the use of additional overlays
-that use the underlying overlay to assist in discovery.  In \cite{icdcs10}, we
+In \cite{one_ring, can_multicast}, the authors discuss the concept of a
+single overlay supporting services through the use of additional overlays,
+which use the underlying overlay to assist in discovery.  In \cite{icdcs10}, we
 presented a reference implementation of a multiple-overlay system that supports
 the use of a public overlay's DHT to store currently active peers in the private
 overlays. The system allows users to create their own private overlays without
@@ -248,10 +248,6 @@ PKI based security~\cite{icdcs10}, forming a basis for the approach
 presented in this paper.
 
 \subsection{Peer-to-Peer Social Networks}
-The recent popularity and growing privacy issues of centralized online social
-networks has motivated research projects aimed at providing private, P2P social
-networks~\cite{peerson, matryoshka, tribler-osn, vis-a-vis}.
-
 In~\cite{peerson}, a DHT provides the look-up service for storing meta data
 pertaining to a peer's profile. Peers query the DHT for updated content from 
 their friends by hashing their unique identifiers (e.g. friends' email
@@ -275,23 +271,23 @@ Our approach enables users to avoid the need for all-to-all connectivity and
 constant up time through the use of NAT traversal support and the
 ability to store the profile in the overlay's distributed data store.
 
-The matryoshka approach presented in~\cite{matryoshka} also uses a DHT for
-looking up a peer's matryoshka or circle of friends. Once a node in the peer's
+The approach presented in~\cite{matryoshka} also uses a DHT for looking up a peer's
+ circle of friends.  Once a node in the peer's
 outermost circle is found, that node is used to route profile requests to the
 innermost circle which contains replicas of a peer's profile. Trust is enabled
 through the use of an identification service contacted through the DHT.  The
 circle of friends concept lacks the simplicity of the abstraction made in our
-approach, whereby a variety of existing structured overlay techniques can be used as a profile
-overlay without concern over innermost and outermost circles.  Our approach
+approach, which can easily be applied to existing structured overlays
+unlike the concept of innermost and outermost circles.  Our approach
 also enables the profile owner to serve as a CA, ensuring that nodes can only
 access a profile overlay after having obtained a signed certificate.  
+
 Unlike the above approaches, the P2P social network presented in~\cite{tribler-osn}
-uses an unstructured overlay and does not require a DHT.  Peers
-connect to each other directly over IP without any overlay routing. Once peers
-are friends, they maintain unique identifiers to deal with dynamic IPs.  Peers
-cache each other's data for availability through replication, and helper nodes
-are used to assist with communication between peers behind NATs.  However, the
-approach lacks security and access control considerations and lacks the
+uses an unstructured overlay without a DHT where peers connect directly to
+each other rather than through the overlay establishing unique identifiers to
+deal with dynamic IPs.  Peers cache each other's data to improve availability.
+While helper nodes are used to assist with communication between peers behind
+NATs.  The approach lacks security and access control considerations and lacks the
 guarantees and the simplicity of the abstraction offered by a structured overlay.
 
 \section{Social Overlays}
@@ -327,10 +323,10 @@ messaging, whose function we will explain shortly.
 Because the users need a way to verify each other that involves social credentials,
 we propose the use of a new form of certificate.
 The main portion of the certificate is similar to a self-signed
-x509~\cite{x509} certificate with public information such as user's name, e-mail
+x509 certificate with public information such as user's name, e-mail
 address, and group affiliations embedded into the certificate.  At the tail of
 the certificate is a friend list represented by many friend entries.  To do this
-we propose employing a technique similar to PGP~\cite{pgp}: users can acquire from their
+we propose employing a technique similar to PGP: users can acquire from their
 friends a signed message consisting of a hash of the peer's certificate, the
 time stamp, and the friend's certificate hash signed by the friend.  Since PGP
 does not provide a strong method for revocation, the time stamp provides
@@ -349,11 +345,10 @@ Sword~\cite{sword}, which supports distributing the data across a set of nodes
 and using a bounded broadcast to discover peers that match all information,
 could be used for searching.
 
-Upon discovering an individual, \textit{B}, with whom a peer, \textit{A} would
-like to establish a friendship, \textit{A} will issue a friendship request.
-As mentioned earlier, the certificate stored in the directory has an overlay
-address, where \textit{B} expects friendship requests to be inserted into the
-DHT.  The friendship request consists of the self-signed certificate of
+If a peer, \textit{A}, desires a friendship with another peer, \textit{B},
+\textit{A} issues a friendship request, which will be stored in the DHT
+at the overlay address listed in \textit{B}'s certificate, as described earlier.
+The friendship request consists of the self-signed certificate of
 \textit{A}, the requesting peer; the public information of the request receiver,
 \textit{B}; and a time stamp; all signed with the private key associated with 
 \textit{A}'s private key matched to their self-signed certificate.
@@ -440,8 +435,8 @@ While structured P2P overlays have been well-studied in a variety of application
 their use in social profile overlays raises new interesting questions, including:
 
 {\bf 1) Handling small overlay networks} - P2P overlay research typically focuses on
-networks larger than the typical user's friend count (the average on Facebook
-is 125).  Because social profile overlays are comparatively smaller, this can
+networks larger than the typical user's friend count (Facebook's average is
+130\footnote{http://www.facebook.com/press/info.php?statistics}).  Because social profile overlays are comparatively smaller, this can
 impact the reliability of the overlay and availability of profile data.  A user
 can host their own profile; however when the user is disconnected it is important
 that their profile remains available even under churn. It is thus important to
@@ -464,8 +459,8 @@ the profile overlay does have point-to-point security, in the public,
 directory overlay, the lack of any form centralization makes policing the system
 a complicated procedure.  While our approach of appending friends list can assist
 users in making decisions on identity, it does not protect against denial of
-service attacks.  One such attack would be for users to attempt to create many
-similar identities overwhelming a user in their attempt to find a specific peer.
+service attacks.  For example, users could attempt create many similar identities
+in an attempt to overwhelm a user in their attempt to find a specific peer.
 Previous work has proposed methods to ensure the usability of overlays even
 while under attack.  For the social overlay to be successful, we must identify
 which methods should be used. A possible approach is to replicate public
@@ -475,15 +470,15 @@ directory overlay for querying prior to using the public directory overlay.
 \section{Conclusion}
 \label{conclusion}
 In this paper, we proposed methods by which a social network can be
-decentralized through the use of structure P2P overlays.  Our system involves
-the use of multiple overlays where all users join a common public overlay and
-individual profile overlays.  The public overlay provides directory services
-that enable users to find and befriend other peers and bootstrap connections
+decentralized through the use of structure P2P overlays.  Our approach uses
+multiple overlays where all users join a public directory overlay and a subset
+of the individual profile overlays.  The directory overlay  enables
+users to find and befriend other peers and bootstrap connections
 into the secure profile overlays.  Upon forming a friendship through the
 directory overlay, peers are given CA signed certificates that allow them to
 join each other's profile overlay.  The owner of the profile overlay acts as
-CA allowing the user to unilaterally revoke certificate, thus ending
-friendships with members of their overlay using efficient and reliable methods.
+CA enabling unilateral dismissal of friendships via certificate revocation
+using efficient and reliable methods.
 For the purpose of storing profile information into the overlay, we cite
 previous work that can be used to provide distributed data services and give
 examples of how to store data securely in the overlay.  Our proposed system
