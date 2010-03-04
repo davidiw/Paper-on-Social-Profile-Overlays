@@ -35,7 +35,7 @@ Online social networking has quickly become one of the most common activities
 of Internet users.  As social networks evolve, they encourage users to share
 more information, requiring the users, in turn, to place more trust into
 social networks.  In centralized systems, this means trusting a third-party
-commericial entity, like Facebook or MySpace, where as peer-to-peer (P2P)
+commercial entity, like Facebook or MySpace, where as peer-to-peer (P2P)
 systems can enable the creation of online social networks where trust need
 only be extended to friends.  In this paper, we present a novel approach to
 constructing completely decentralized social networks.  All users join a
@@ -43,7 +43,7 @@ common directory overlay, which facilitates friend discovery connecting peers
 to individualized profile overlays, mapping the ownership of the overlay to
 the ownership of the profile.  Each user transparently manages access to their
 profile through the use of a public key infrastructure (PKI).  We define
-interfaces and present tools that can be used to implement this sytem, as
+interfaces and present tools that can be used to implement this system, as
 well.  The key aspects of P2P as it applies to this work include
 self-organization, self-configuration, and scalability.
 
@@ -96,15 +96,15 @@ groups are open, though others require approval from an administrator, and in
 general all users can post messages to the group.  
 
 Using this social networking model, we describe how a public overlay can be
-used as a directory for finding and briending friends or finding and accessing
-groups.  Once access has been enabled, the public overlay can be used to
-bootstrap connectivity to existing profile and group overlays.  Security for
-profile are provided by a public key infrastructure (PKI), where profile
-owners or group managers are the certificate authorities (CA) and all members
-have signed certificates.  The overlay stores profile data or group
-information in its distributed data store, supporting decentralized access
-using scalable mechanisms regardless of the profile owner's online presence.
-In this paper, we present the architecture of these overlays, as presented in
+used as a directory for finding and befriending friends or finding and
+accessing groups.  Once access has been enabled, the public overlay can be used
+to bootstrap connectivity to existing profile and group overlays.  Security for
+profile are provided by a public key infrastructure (PKI), where profile owners
+or group managers are the certificate authorities (CA) and all members have
+signed certificates.  The overlay stores profile data or group information in
+its distributed data store, supporting decentralized access using scalable
+mechanisms regardless of the profile owner's online presence.  In this paper,
+we present the architecture of these overlays, as presented in
 Figure~\ref{fig:system}.
 
 \begin{figure}[h]
@@ -143,7 +143,7 @@ systems are generally constructed by peers attempting to maintain a certain
 amount of connections to other peers in the P2P system, whereas structured
 systems organize into well-defined topologies, such as 2-D rings or
 hypercubes.  Though unstructured systems are typically simpler to bootstrap
-and maintain, they rely on global knowledge, flooding, or stocahstic
+and maintain, they rely on global knowledge, flooding, or stochastic
 techniques to search for information in an overlay and thus have scalability
 constraints.  Alternatively, structured systems have guaranteed search time
 typically with a lower bound of $O(\log N)$.  Some examples of structured
@@ -236,7 +236,7 @@ friends maintain direct connections with the peer, and outer circles consist
 of friends of friends and friends of friends of friends.  The main goal of
 this work is to remove the private components of a profile from a central
 entity, whereas our approach makes a clean break from all centralization and
-emphasizes scalability through distributed replica technqiues.
+emphasizes scalability through distributed replica techniques.
 
 Unlike the above approaches, the P2P social network presented
 in~\cite{tribler-osn} uses an unstructured overlay without a DHT where peers
@@ -380,7 +380,7 @@ new message.
 Both the directory and profile overlays have methods by which peers can receive
 messages.  In the directory overlay, these take form by means of friendship
 request and accept.  In the profile overlay, they consist of private messages.
-While polling the location in the DHT occassionally will allow peers to
+While polling the location in the DHT occasionally will allow peers to
 receive the messages, polling has inherent delays and network costs.
 Alternatively, an event mechanism would enable peers to receive sent messages
 very quickly after they have been sent with minimal impact on network
@@ -400,7 +400,7 @@ Of course, this does not prevent potential race conditions occurring, such as
 a situation where a peer recently joined their profile overlay, had already
 queried their mailbox and found it empty, while simultaneously a private
 message was sent to them yet they were not in the listeners list.  Thus
-occassional polling is required, though can be minimized, the longer a node
+occasional polling is required, though can be minimized, the longer a node
 has been online.
 
 \subsection{Active Peers}
