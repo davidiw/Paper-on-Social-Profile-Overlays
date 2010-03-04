@@ -1,5 +1,5 @@
 #!/bin/bash
-paper=iptps10
+paper=SocialProfileOverlays
 latex $paper -interaction=nonstopmode
 bibtex $paper
 latex $paper -interaction=nonstopmode
