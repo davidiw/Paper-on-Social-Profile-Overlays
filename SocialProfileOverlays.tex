@@ -33,19 +33,18 @@ University of Florida
 
 Online social networking has quickly become one of the most common activities
 of Internet users.  As social networks evolve, they encourage users to share
-more information, requiring the users, in turn, to place more trust into
-social networks.  In centralized systems, this means trusting a third-party
-commercial entity, like Facebook or MySpace, where as peer-to-peer (P2P)
-systems can enable the creation of online social networks where trust need
-only be extended to friends.  In this paper, we present a novel approach to
-constructing completely decentralized social networks.  All users join a
-common directory overlay, which facilitates friend discovery connecting peers
-to individualized profile overlays, mapping the ownership of the overlay to
-the ownership of the profile.  Each user transparently manages access to their
-profile through the use of a public key infrastructure (PKI).  We define
-interfaces and present tools that can be used to implement this system, as
-well.  The key aspects of P2P as it applies to this work include
-self-organization, self-configuration, and scalability.
+more information, requiring the users, in turn, to place more trust into social
+networks.  In centralized systems, this means trusting a third-party commercial
+entity, like Facebook or MySpace, where as peer-to-peer (P2P) systems can
+enable the creation of online social networks where trust need only be extended
+to friends.  In this paper, we present a novel approach to constructing
+completely decentralized social networks through P2P overlays.  All users join
+a common directory overlay, which facilitates friend discovery connecting peers
+to individualized profile overlays, mapping the ownership of an overlay to the
+ownership of a profile.  Profile management builds upon transparent use of a
+public key infrastructure (PKI).   We define necessary interfaces for
+constructing the system and describe some examples of user interactions with
+the system.
 
 \end{abstract}
 
@@ -121,9 +120,10 @@ clarity, overlay shortcut connections are not shown.} \label{fig:system}
 The rest of this paper is organized as follows.  Section~\ref{background}
 provides background and related work.  Section~\ref{social_overlays} describes
 our multi-overlay approach, explaining how to map social networks onto
-structured P2P overlays.  In Section~\ref{outstanding}, we explore some of the
-remaining challenges introduced by our approach.  We conclude the paper in
-Section~\ref{conclusion}.
+structured P2P overlays.  We express our expectations for user interaction with
+the system in Section~\ref{user_interaction}.  In Section~\ref{outstanding}, we
+explore some of the remaining challenges introduced by our approach.  We
+conclude the paper in Section~\ref{conclusion}.
 
 \section{Background}
 \label{background}
@@ -133,23 +133,23 @@ for bootstrapping overlays, and other methods for constructing decentralized
 online social networks.  We place an early emphasis on structured P2P systems,
 as they  provide the basis for our approach by  creating scalable, autonomic
 environments, thereby limiting user exposure to the gory details of system
-configuration and organization.  Though P2P systems can be difficult to
-bootstrap especially when their are no dedicated bootstrapping nodes.
+configuration and organization.  We also focus on the challenges of
+bootstrapping P2P systems when the system lacks dedicated bootstrapping nodes.
 
 \subsection{Structured P2P Overlays}
 
 There are two types of P2P systems, unstructured and structured.  Unstructured
 systems are generally constructed by peers attempting to maintain a certain
 amount of connections to other peers in the P2P system, whereas structured
-systems organize into well-defined topologies, such as 2-D rings or
-hypercubes.  Though unstructured systems are typically simpler to bootstrap
-and maintain, they rely on global knowledge, flooding, or stochastic
-techniques to search for information in an overlay and thus have scalability
-constraints.  Alternatively, structured systems have guaranteed search time
-typically with a lower bound of $O(\log N)$.  Some examples of structured
-systems are Pastry~\cite{pastry}, Chord~\cite{chord},
-Symphony~\cite{symphony}, Kademlia~\cite{kademlia}, CAN~\cite{can}, and
-Dynamo~\cite{dynamo}.
+systems organize into well-defined topologies, such as 2-D rings or hypercubes.
+Though unstructured systems are typically simpler to bootstrap and maintain,
+they rely on global knowledge, flooding, or stochastic techniques to search for
+information in an overlay and thus have scalability constraints.
+Alternatively, structured systems have guaranteed search time typically with a
+lower bound of $O(\log N)$, thouch recent research has shown that these systems
+can be constructed to support $O(1)$ search time.  Some examples of structured
+systems are Pastry~\cite{pastry}, Chord~\cite{chord}, Symphony~\cite{symphony},
+Kademlia~\cite{kademlia}, CAN~\cite{can}, and Dynamo~\cite{dynamo}.
 
 A key component of most structured overlays is support for decentralized
 storage / retrieval of information by mapping keys to specific node IDs in an
@@ -165,28 +165,28 @@ Kosha~\cite{kosha}.
 \subsection{Bootstrapping P2P Overlays}
 
 One of the key challenges to overlays is the bootstrapping problem, that is,
-ho do I find an active member in the overlay so that I can be a contributing
-member of the overlay.  In large public systems, often times, the owners of
-the project and sometimes corporate sponsors provide these resources, though
-these types of bootstrapping peers are typically not available for small,
-private overlays.  The bootstrapping problem can be divided into two
-components: finding a bootstrapping member of the overlay and handling
-connectivity constraints if the overlay has no members with public addresses.
-In~\cite{one_ring, can_multicast}, the authors discuss the concept of a single
-overlay supporting services through the use of additional overlays, which use
-the underlying overlay to assist in discovery, this deals with the component
-of finding a bootstrap peer.  To address the challenge of bootstrapping peers
-being behind NATs, we described a system in~\cite{vpo} enables the public
-overlay to act as a NAT traversal rendezvous point.  More specifically, a
-peer, attempting to join a private overlay, queries the public overlay's DHT
-to obtain a list of currently online private overlay peers who have matching
-public IDs.  The peers then use the public overlay, in addition to direct UDP
-or TCP links, to communicate with the private overlay nodes and bootstrap into
-the private overlay.  This method enables peers even behind firewalls and NATs
-to have publicly available addresses in the public overlay.  Additionally this
-work describes mechanisms that enable the use of PKI technologies to
-seamlessly secure both point-to-point and end-to-end communication in a
-structured overlay.
+how does one find an active member in the overlay in order to become a member.
+In large public systems, often times, the owners of the project and sometimes
+corporate sponsors provide these resources, though these types of bootstrapping
+peers are typically not available for small, private overlays.  The
+bootstrapping problem can be divided into two components: finding a
+bootstrapping member of the overlay and handling connectivity constraints if
+the overlay has no members with public addresses.  In~\cite{one_ring,
+can_multicast}, the authors discuss the concept of a single overlay supporting
+services through the use of additional overlays, which use the underlying
+overlay to assist in discovery, this deals with the component of finding a
+bootstrap peer.  To address the challenge of bootstrapping peers being behind
+NATs, we described a system in~\cite{vpo} enables the public overlay to act as
+a NAT traversal rendezvous point.  More specifically, a peer, attempting to
+join a private overlay, queries the public overlay's DHT to obtain a list of
+currently online private overlay peers who have matching public IDs.  The peers
+then use the public overlay, in addition to direct UDP or TCP links, to
+communicate with the private overlay nodes and bootstrap into the private
+overlay.  This method enables peers even behind firewalls and NATs to have
+publicly available addresses in the public overlay.  Additionally this work
+describes mechanisms that enable the use of PKI technologies to seamlessly
+secure both point-to-point and end-to-end communication in a structured
+overlay.
 
 During evaluation, using both simulated and real systems, the time for a
 single peer to join first the public and thereafter private overlays was small
@@ -551,23 +551,24 @@ directory overlay for querying prior to using the public directory overlay.
 
 In this paper, we proposed methods by which a social network can be
 decentralized through the use of structure P2P overlays.  P2P systems, in
-general, have very nice properties that make them attractive for average
-users.  Namely, they require minimal configuration and organization of
-resources, in addition, P2P systems naturally handle increased demand to
-additional peers.  Our approach is based upon the use of a multiple overlay
-system, where all users join a public directory overlay and their's as well as
-their friends profile overlays.  The directory overlay enables users to find
-and befriend other peers and bootstrap connections into the secure profile
-overlays.  Upon forming a friendship through the directory overlay, peers are
-given CA signed certificates that allow them to join each other's profile
-overlay.  The owner of the profile overlay acts as CA enabling unilateral
-dismissal of friendships via certificate revocation using efficient and
-reliable methods.  For the purpose of storing profile information into the
-overlay, we cite previous work that can be used to provide distributed data
-services and give examples of how to store data securely in the overlay.  Our
-proposed system returns control of the social network and more importantly
-users' identity to the users and eliminates the need for centralized social
-networks.
+general, have very nice properties that make them attractive for average users.
+Namely, they require minimal configuration and organization of resources, in
+addition, P2P systems naturally handle increased demand to additional peers.
+Our approach is based upon the use of a multiple overlay system, where all
+users join a public directory overlay and their's as well as their friends
+profile overlays.  The directory overlay enables users to find and befriend
+other peers and bootstrap connections into the secure profile overlays.  Upon
+forming a friendship through the directory overlay, peers are given CA signed
+certificates that allow them to join each other's profile overlay.  The owner
+of the profile overlay acts as CA enabling unilateral dismissal of friendships
+via certificate revocation using efficient and reliable methods.  Additionally,
+the profile overlay provides a clean abstraction for privacy purposes that
+simplfies access to profile data, as only members of the overlay have access to
+the profile.  For the purpose of storing profile information into the overlay,
+we cite previous work that can be used to provide distributed data services and
+give examples of how to store data securely in the overlay.  Our proposed
+system returns control of the social network and more importantly users'
+identity to the users and eliminates the need for centralized social networks.
 
 \small{
 \bibliographystyle{IEEEtran}
