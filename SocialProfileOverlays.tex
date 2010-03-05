@@ -284,19 +284,17 @@ address.  The overlay address enables asynchronous offline messaging, such as
 friendship requests, which will be explained shortly.
 
 Because the users need a way to verify each other that involves social
-credentials, we propose the use of a new form of certificate.  The main
-portion of the certificate is similar to a self-signed x509 certificate with
-public information such as user's name, e-mail address, and group affiliations
-embedded into the certificate.  At the tail of the certificate is a friend
-list represented by many friend entries.  To do this we propose employing a
-technique similar to PGP: users can acquire from their friends a signed
-message consisting of a hash of the peer's certificate, the time stamp, and
-the friend's certificate hash signed by the friend.  Since PGP does not
-provide a strong method for revocation, the time stamp provides additional
-information to help decide whether or not a friendship link is still active
-without accessing the profile overlay of either peers.  Peers should request a
-new friend list entry within a certain period of time or it will appear that
-the friendship is no longer valid.
+credentials, we propose the use of a new form of certificate.  The main portion
+of the certificate is similar to a self-signed x509 certificate with public
+information such as user's name, e-mail address, and group affiliations
+embedded into the certificate.  At the tail of the certificate is a list of
+friend authorizations using to techniques similar to PGP.  The field should
+consist of a hash of the user's certificate, a hash of the friend's
+certificate, and a time stamp all signed by the friend's certificate.  Since
+PGP does not provide a strong method for revocation, the time stamp assists in
+deciding whether or not a friendship link is still active without accessing the
+profile overlay of either peers.  Thus peers should actively maintain these
+lists, so that no entries appear to be invalid.
 
 While looking for an individual, a peer may discover that many individuals
 have overlapping public information components, such as the user's name.
@@ -328,6 +326,15 @@ certificate, they may access the remote peer's profile overlay as discussed
 in~\ref{profile_overlay}, which is also responsible for activities such as
 revocation.
 
+Discovery of a user is not limited to the directory entries.  Because users
+have a public overlay based mailbox that does not easily identify them, the
+system can act as an anonymous message relay.  This enables mechanisms out of
+band discovery, key for users that do not feel comfortable with placing
+information in the directory overlay.  Peers can share their mailbox
+identification and certificates through mechanisms like e-mail, chat, or
+personal websites.  Once a peer has a mailbox identification and , they can
+submit secure friendship requests.
+
 \subsection{The Profile Overlay}
 \label{profile_overlay}
 
@@ -342,13 +349,13 @@ efficiently multiplex a P2P system across multiple, virtual private overlays
 enabling each profile owner to have a profile overlay consisting of their
 online friends.  For access control, we employ a PKI, where each member uses
 the signed certificate generated during the ``finding and verifying friends''
-stage.  All links are encrypted using symmetric security algorithms
-established through the PKI, thus preventing uninvited guests from gaining
-direct access to the overlay and hence the profile.  Because the profile owner
-also is the CA for all members of the overlay, they can easily revoke users
-from access to the profile overlay.  In~\cite{vpo} describes efficient
-mechanisms for overlay revocation through the use of broadcasting for
-immediate revocation and the use of DHT for indirect and permanent revocation.
+stage.  All links are encrypted using symmetric security algorithms established
+through the PKI, thus preventing uninvited guests from gaining direct access to
+the overlay and hence the profile.  Because the profile owner also is the CA
+for all members of the overlay, they can easily revoke users from access to the
+profile overlay.  \cite{vpo} describes efficient mechanisms for overlay
+revocation through the use of broadcasting for immediate revocation and the use
+of DHT for indirect and permanent revocation.
 
 The message board of a profile can be stored in two ways: distributed within
 the profile overlay via a data store or stored on the profile owner's personal
@@ -363,17 +370,16 @@ should support complex queries~\cite{complex_queries} allowing easy access to
 data stored chronologically, by content, by type, i.e., media, status updates,
 or message board discussions.
 
-Private messaging in the profile overlay is unidirectional meaning that only
-the profile owner can receive private messages using their overlay.  To
-enforce this, a private message should be prepended with a symmetric key
-encrypted by the profile owners public key, the message should be appended by
-a hash of the message to ensure integrity and the entire message encrypted by
-the symmetric key.  This approach ensures that only the sender and the profile
-owner can decrypt the private message.  The contents of the private message
-should include the sender, time sent, and the subject.  Messages can be stored
-in well known locations, so that the profile owner can either poll the
-location or, alternatively, use an event based system to notify them of the
-new message.
+Private messaging in the profile overlay is unidirectional; only the profile
+owner can receive private messages using their overlay.  To enforce this, a
+private message should be prepended with a symmetric key encrypted by the
+profile owners public key, the message should be appended by a hash of the
+message to ensure integrity and the entire message encrypted by the symmetric
+key.  This approach ensures that only the sender and the profile owner can
+decrypt the private message.  The contents of the private message should
+include the sender, time sent, and the subject.  Messages can be stored in well
+known locations, so that the profile owner can either poll the location or,
+alternatively, use an event based system to notify them of the new message.
 
 \subsection{Event Based Message Notification}
 
@@ -394,14 +400,14 @@ string such as ``private messages for me'' and storing the profile owners
 active nodes into the list of listeners.  When a message was stored to the
 users mailbox, the sender could query this list and send to each listener a
 notification of the new private message.  Alternatively, if a higher degree of
-anonymity is required, the DHT server could be modified to forward the
-response to the listeners directly rather than returning a list of listeners.
-Of course, this does not prevent potential race conditions occurring, such as
-a situation where a peer recently joined their profile overlay, had already
+anonymity is required, the DHT server could be modified to forward the response
+to the listeners directly rather than returning a list of listeners.  Of
+course, this does not prevent potential race conditions occurring, such as a
+situation where a peer recently joined their profile overlay, had already
 queried their mailbox and found it empty, while simultaneously a private
 message was sent to them yet they were not in the listeners list.  Thus
-occasional polling is required, though can be minimized, the longer a node
-has been online.
+occasional polling is required, though can be minimized, the longer a node has
+been online.
 
 \subsection{Active Peers}
 
@@ -436,6 +442,68 @@ had their certificate signed by that administrator would need to obtain a new
 certificate.  Alternatively, the owner of the group and the original CA could
 sign the group members certificates again, so that they are signed by the root
 CA and would not lose access if administration changes.
+
+\section{User Interaction}
+\label{user_interaction}
+
+Though this paper describes a complex organization of a social network, the
+result should be transparent to the user such that interaction with this system
+should be no different than existing online social networks.  The user space
+implementation could consist of a downloadable application or a browser based
+Flash or Silverlight application.  If the user, Bob, had already created an
+account, Bob would be presented with an interface showing their friends
+profiles.  Based upon Bob's configuration, the social application could
+retrieve profile updates as he navigates to individual profiles or as soon as
+the application joins an individual profile overlay, reactive versus proactive
+profile querying.  
+
+If this was Bob's first time starting the application, he would be presented
+with screens asking for his privacy preferences, such as whether or not he
+wants his information in the directory overlay, if he felt comfortable enough
+with the idea of people knowing he was a member of the social network and who
+his friends are.  Then application would ask for personal information to
+populate his profile and to generate his directory information.  At which
+point, the application would join the overlay and create Bob's private overlay.
+Bob could then start searching for friends, make friend requests, and respond
+to friend requests.
+
+Recently, Bob had been thinking about his high school days and was curious if
+Alice was also a member of this social network, though Bob did not have Alice's
+e-mail address, just her first and last name.  Bob enters Alice's name into the
+search box and is presented by a list of Alice's.  As Bob reviews each of the
+entries, he recognizes an Alice that is friend's with some of the same people
+Bob was in high school.  Bob selects to become her friend.  At which point, the
+application transparently inserts a friendship request to Alice and signs Alice's
+certificate so Alice can view Bob's profile.  Of course that is because Bob has
+chosen to allow user-initiated friend requests access to his profile.  Alice
+receives Bob's request, peruses his profile and feels fine becoming friends with
+Bob, which initiates a transparent process of signing Bob's certificate and
+placing the result in the public overlay.  There is one problem though, when
+Bob receives Alice's signature and views her profile, he realizes that this
+is some other Alice.  He quickly chooses to defriend her.  This causes Bob's
+application to broadcast a revocation for Alice's signature and to store the
+revocation in the DHT.  Alice, who was viewing Bob's profile, is notified of
+this sudden loss of trust and while she is able to view the contents of Bob's
+profile, which she has already accessed and obtained, she can no longer
+receive updates as members of Bob's overlay prevent her from accessing it.
+
+In another instance, Bob bumped into Carol, who e-mailed Bob a copy of her
+profile blob, Carol's public overlay mailbox and certificate.  Bob points his
+social application to this configuration data, and it immediately submits a
+request to become Carol's friend.  Carol receives notification and accepts
+Bob's friendship request.  At this point, both Bob and Carol have transparently
+exchanged signed certificates and have mutual access to each other profiles.
+As Bob reads Carol's latest news, he remembers a funny personal story and that
+he would like to privately share with Carol.  So he sends Carol a private
+message.  Carol is offline though.  The next time Carol goes online, her social
+application discovers the message and presents it to her.  In this scenario,
+Bob's application has taken the private message, secured it with her public key
+and a symmetric key.  After which, it inserts it into the DHT and sends a notice
+to the event notification system, which detects that there were no entries
+listening for incoming messages.  When Carol's application comes online, it
+queries the DHT receiving the message.  The message is decrypted and
+authenticated ensuring that it originated from Bob and then presents the results
+to Carol.
 
 \section{Challenges}
 \label{outstanding}
