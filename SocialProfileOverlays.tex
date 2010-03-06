@@ -1,21 +1,13 @@
-\documentclass[conference]{IEEEtran}
-\usepackage[dvips]{graphicx} 
-\usepackage[tight]{subfigure}
-\usepackage[numbers]{natbib}
-
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-
-\fancyfoot[CE,CO]{\thepage} 
+\documentclass{sig-alternate}
+%\usepackage{times}
 \usepackage{url}
-\usepackage{multirow}
-\usepackage{array}
 \usepackage{epsfig}
 \usepackage{footnote}
 \usepackage{amsmath}
+\usepackage[small,it]{caption}
 
-\hyphenpenalty=10000
-\tolerance=10000
+%\hyphenpenalty=10000
+%\tolerance=10000
 
 \setlength{\parskip}{0pt}
 \setlength{\parsep}{0pt}
@@ -30,35 +22,45 @@
 
 \begin{document}
 
-\title{Towards Social Profile Based Overlays}
 
-\author{
-David Isaac Wolinsky,
-Pierre St. Juste,
-P. Oscar Boykin,
-Renato Figueiredo
-\\
-University of Florida
-\\
-}
+\twocolumn[%
+\centerline{\Large \bf OverSoc: Social Profile Based Overlays} 
+  \medskip
+  \centerline{\bf David Isaac Wolinsky, Pierre St. Juste, P. Oscar Boykin, Renato Figueiredo}
+  \centerline{\bf University of Florida}
+  \bigskip
+]
 
-\maketitle
+%\title{OverSoc: Social Profile Based Overlays}
+
+%\numberofauthors{1}
+
+%\author{
+%\alignauthor
+%David Isaac Wolinsky,
+%Pierre St. Juste,
+%P. Oscar Boykin,
+%Renato Figueiredo \\
+%\affaddr{University of Florida}
+%}
+
+%\maketitle
 
 \begin{abstract}
 
-Online social networking has quickly become one of the most common activities
-of Internet users.  As social networks evolve, they encourage users to share
-more information, requiring the users, in turn, to place more trust into social
+Online social networking has quickly become one of the most common Internet
+activities.  As social networks evolve, they encourage users to share more
+information, requiring the users, in turn, to place more trust into social
 networks.  In centralized systems, this means trusting a third-party commercial
 entity, like Facebook or MySpace.  Peer-to-peer (P2P) systems can enable the
 creation of online social networks extending trust to friends only.  In this
 paper, we present a novel approach to constructing completely decentralized
-social networks through P2P overlays.  A common directory overlay facilitates
-friend discovery and bootstraps connectivity to individualized profile
-overlays, mapping the ownership of an overlay to the ownership of a profile.
-Profile management transperntly uses a public key infrastructure (PKI).   We
-define necessary interfaces for constructing the system and describe some
-examples of user interactions with the system.
+social networks through P2P overlays, OverSoc.  Our approach relies on a common
+directory overlay, which facilitates friend discovery and bootstraps
+connectivity to individualized profile overlays.  Each user has their own
+individual profile overlay managed transparently using a public key
+infrastructure (PKI).  We define necessary interfaces for constructing the
+system and describe some examples of user interactions with the system.
 
 \end{abstract}
 
@@ -85,17 +87,17 @@ networks and P2P systems as a means to return ownership to the users, noting
 that a social network made up of social links is inherently a P2P system with
 the aside that they are currently developed on top of centralized systems.  In
 this paper, we extend this idea with focus on the topic of topology; that is,
-how to self-organize social profiles that leverage the benefits offered by a
+how to organize social profiles that leverage the benefits offered by a
 structured P2P overlay abstraction.
 
-Structured P2P overlays provide a scalable, resilient, and self-managing
-platform for distributed applications.  Structured overlays enable users to
-easily create their own decentralized systems for the purpose of data sharing,
-interactive activities, and other networking-enabled activities.  In this
-paper, we extend our previous work~\cite{vpo} to enable social network profile
-overlays.  The previous work addresses the challenges of bootstrapping secure,
-private overlays in NAT and firewall environments by using a public overlay
-for discovery and as a relay or communication transport.  
+Structured P2P overlays provide a scalable, resilient, autonomic platform for
+distributed applications.  Structured overlays enable users to easily create
+their own decentralized systems for the purpose of data sharing, interactive
+activities, and other networking-enabled activities.  In this paper, we extend
+our previous work~\cite{vpo} to enable social network profile overlays.  The
+previous work addresses the challenges of bootstrapping secure, private
+overlays in NAT and firewall environments by using a public overlay for
+discovery and as a relay or communication transport.  
 
 A typical social network consists of users and groups.  Each user has a
 profile, a set of friends, and private messaging; and each group consists of
@@ -104,38 +106,39 @@ personal information, status updates, and public conversations, similar to a
 message board.  Friends are individuals trusted sufficiently by a user to view
 the user's profile.  Private messaging sends messages discretely between users
 without leaking the message to other members.  Groups have similar features,
-though identity is hared by many users.
+though identity is shared by many users.
 
-Using this social networking model, we describe how a public overlay can be
-used as a directory for finding and befriending friends or finding and
-accessing groups.  Once access has been enabled, the public overlay can be used
-to bootstrap connectivity to existing profile and group overlays.  Security for
-profile are provided by a public key infrastructure (PKI), where profile owners
-or group managers are the certificate authorities (CA) and all members have
-signed certificates.  The overlay stores profile data or group information in
-its distributed data store, supporting decentralized access using scalable
-mechanisms regardless of the profile owner's online presence.  In this paper,
-we present the architecture of these overlays, as presented in
-Figure~\ref{fig:system}.
+Using this social networking model, we have designed OverSoc.  OverSoc uses a
+public overlay can be used as a directory for finding and befriending peers or
+finding and accessing groups.  Once group and profile access has been offered,
+the public overlay can be used to bootstrap connectivity to existing profile
+and group overlays.  Security for profile are provided by a public key
+infrastructure (PKI), where profile owners or group managers are the
+certificate authorities (CA) and all members have signed certificates.  The
+overlay stores profile data or group information in its distributed data store,
+supporting decentralized access using scalable mechanisms regardless of the
+profile owner's online presence.  In this paper, we present the architecture of
+these overlays, as presented in Figure~\ref{fig:system}.
 
 \begin{figure}[h]
 \centering
 \epsfig{file=figs/subrings.eps, width=3.12in}
-\caption{An example social overlay network.  Alice has a friendship with Bob
-and Carol, hence both are members of her profile overlay. Bob has a friendship
-with Alice and Dave but not Carol; hence Alice and Dave are members of his
-profile overlay, while Carol is not.  Each peer has many overlay memberships
-but a single root represented by dashed lines in various shades of gray.  For
-clarity, overlay shortcut connections are not shown.} \label{fig:system}
+\caption{An example OverSoc social overlay network.  Alice has a friendship
+with Bob and Carol, hence both are members of her profile overlay. Bob has a
+friendship with Alice and Dave but not Carol; hence Alice and Dave are members
+of his profile overlay, while Carol is not.  Each peer has many overlay
+memberships but a single root represented by dashed lines in various shades of
+gray.  For clarity, overlay shortcut connections are not shown.}
+\label{fig:system}
 \end{figure}
 
 The rest of this paper is organized as follows.  Section~\ref{background}
 provides background and related work.  Section~\ref{social_overlays} describes
-our multi-overlay approach, explaining how to map social networks onto
-structured P2P overlays.  We express our expectations for user interaction with
-the system in Section~\ref{user_interaction}.  In Section~\ref{outstanding}, we
-explore some of the remaining challenges introduced by our approach.  We
-conclude the paper in Section~\ref{conclusion}.
+OverSoc, explaining how to map social networks onto structured P2P overlays.
+We express our expectations for user interaction with the system in
+Section~\ref{user_interaction}.  In Section~\ref{outstanding}, we explore some
+of the remaining challenges introduced by our approach.  We conclude the paper
+in Section~\ref{conclusion}.
 
 \section{Background}
 \label{background}
@@ -208,11 +211,11 @@ their friends by hashing their unique identifiers (e.g. friends' email
 addresses).  The retrieved meta data contains information for obtaining the
 profile data such as IP address and file version. Their work relies on a PKI
 system that provides identification, encryption, and access control.  In
-contrast, our approach provides each user their own private overlay secured by
-point-to-point encryption and authentication amongst all peers in the profile
-overlay.  The profile overlay provides a clean abstraction of access control,
-whereby once admitted to a private overlay, users can access a distributed data
-store which holds the contents of the owners profile.
+contrast, OverSoc users and groups have their own private overlay secured by
+point-to-point encryption and authentication amongst all peers in the overlay.
+The private overlay provides a clean abstraction of access control, whereby
+once admitted to a private overlay, users can access a distributed data store
+which holds the contents of the owners profile.
 
 Shakimov et al. in \cite{vis-a-vis} take a different approach by depending on
 virtual individual servers (VIS) hosted on a cloud infrastructure such as
@@ -221,8 +224,8 @@ used as a directory for groups and interest-based searches. Their approach
 assumes bidirectional end-to-end connectivity between each VIS, where a profile
 is only available during the up time of the VIS.  Because of the demands on
 network connectivity and up time, the approach assumes a cloud-hosted VIS and
-has difficulty being used on user-owned resources.  Our approach enables users
-to avoid the need for all-to-all connectivity and constant up time through the
+has difficulty being used on user-owned resources.  OverSoc allows peers to
+have  asymmetric connectivity and does not require constant up time through the
 use of NAT traversal support and the ability to store the profile in the
 overlay's distributed data store.
 
@@ -233,7 +236,7 @@ their circle of friends.  The circle of friends consists of an unstructured
 overlay, where direct friends maintain direct connections with the peer, and
 outer circles consist of friends of friends and friends of friends of friends.
 The main goal of this work is to remove the private components of a profile
-from a central entity, whereas our approach makes a clean break from all
+from a central entity, whereas OverSoc makes a clean break from all
 centralization and emphasizes scalability through distributed replica
 techniques.
 
@@ -249,55 +252,56 @@ the abstraction offered by a structured overlay.
 \section{Social Overlays}
 \label{social_overlays}
 
-In this section, we explain how to map online social networking to virtual
-private overlay based social network consisting of a public directory overlay
-with many private profile overlays.  The directory overlay supports friend
-discovery and verification and stores a lists of peers currently active in
-each profile overlay.  Profile overlays support message boards, private
-messages, and media sharing.
+In this section, we explain how OverSoc maps online social networking to
+virtual private overlays consisting of a public directory overlay with many
+private profile overlays.  The directory overlay supports friend discovery and
+verification and stores a lists of peers currently active in each profile
+overlay.  Profile overlays support message boards, private messages, and media
+sharing.
 
 \subsection{Finding Friends}
 
-In a traditional social network, a directory provides the ability to search for
-users using public information, such as the user's full name, user ID, e-mail
-address, group affiliations, and friends.  The search results return zero or
-more matching directory entries.  To map this to our proposed social overlay
-directory entries are inserted into the DHT of a public overlay.  Since the
-public information has many components, each could be used as indexes into the
-DHT pointing to a common complete listing of their public information.  For
-example, a user can store a pointer at the DHT key $hash("alice")$ or
-$hash("alice bob")$.  The key here is that any subset of the user's public
-information in lower-case format can be hashed into DHT index that would
-eventually direct the searching user to one or more user.  More explicit
-searches could sift through the results and present to the user only those
-peers, which match all the search parameters.  The amount of information shared
-publicly should be configurable by the user.  
+In a traditional social network, directories are used to search for users based
+upon public information, such as the user's full name, user ID, e-mail address,
+group affiliations, and friends.  The resulting search returns zero or more
+matching directory entries.  In OverSoc, directory entries are inserted into
+the DHT of a public overlay.  Since the public information has many components,
+various subsets form DHT keys that all point to a common, complete listing of
+the matching public information.  For example, a user can store a pointer at
+the DHT key $hash("alice")$ or $hash("alice bob")$.  The key here is that any
+subset of the user's public information in lower-case format can be hashed into
+a DHT index that would eventually direct the searching user to one or more
+users public information.  More explicit searches could sift through the
+results and present to the user only those peers, which match all the search
+parameters.  The amount of information shared publicly should be configurable
+by the user.
 
-While looking for an individual, a peer may discover that many individuals
-have overlapping public information components, such as the user's name.
-Assuming all entries are legitimate, the overlay must have some method of
-supporting multiple, distinct values at the same key, leaving the peer or the
-peer's DHT client to parse the responses and determining the best match by
-reviewing the contents of each certificate.  Alternatively, a technique like
-Sword~\cite{sword}, which supports distributing the data across a set of nodes
-and using a bounded broadcast to discover peers that match all information,
-could be used for searching.
+While looking for an individual, a peer may discover that many individuals have
+overlapping public information components, such as the user's name.  Assuming
+all entries are legitimate, the overlay must have some method of supporting
+multiple, distinct values at the same key, requiring the application and user
+to parse the responses and determine the best match by reviewing the contents
+of each certificate.  Alternatively, a technique like Sword~\cite{sword}, which
+supports distributing the data across a set of nodes and using a bounded
+broadcast to discover peers that match all information, could be used for
+searching.
 
-When searching for friends, it is desirable that their public information is
-presented with some level of trust.  PGP certificates can be used to store
-user's public information and verify user's friends.  The main portion of a PGP
-certificate contains information such as user name, name, e-mail address,
-potentially other user-defined, and signature packets from those that trust the
-certificate including groups and individuals.  The signature packets can be
-used to provide a verifiable list of friends.  Each time a user befriends
-someone, they should exchange signature packets containing at a minimum the
-friends PGP certificate ID, a signature expiration time, and a signature
-binding this information with the new friend's existing PGP certificate.  This
-increases the trust level of individual searching for others if they have
-common friendships.  The use of a time stamp in the signature assists in
-deciding whether or not a friendship link is still active without accessing the
-profile overlay of either peers.  Thus peers that maintain friendships need to
-periodically exchange signature packets.
+To address trust levels when searching for friends, a PGP certificate can be
+used to store user's public information and verify user's friends and groups.
+In OverSoc, the main portion of a PGP certificate contains information such as
+user name, full name, e-mail address, potentially other user-defined data, and
+a signature packets from the user and those that trust the certificate
+including groups and individuals.  These signature packets represent a list of
+verifiable friends and groups assisting to further uniquely identify a user.
+Each time a user befriends someone, they should exchange signature packets
+containing at a minimum the friends PGP certificate ID, a signature expiration
+time, and a signature binding this information with the new friend's existing
+PGP certificate.  This increases the trust level of individuals searching for
+others especially if they have common friendships or group membership.  The use
+of a time stamp in the signature assists in deciding whether or not a
+friendship link is still active without accessing the profile overlay of either
+peers.  Thus peers that maintain friendships need to periodically exchange
+signature packets.
 
 \subsection{Making Friends}
 
@@ -312,16 +316,15 @@ profiles.  Once profile access has been enabled, the \textit{Alice} and
 either one of them can unilaterally end the relationship.
 
 Alice's friendship request should contain a pointer to her certificate in the
-overlay, a time stamp, Bob's certificate identifier, and a signature.  The
-friendship request could be encrypted using symmetric algorithms with the
-symmetric keys encrypted by Bob's public key for the purpose of anonymity.
-When Bob receives the signature request, he can verify Alice's identity and
-that the request was made by her.  Upon Bob receiving Alice's friendship
-request, he has three choices a conditional accept, an unconditional accept, or
-a reject.  During an unconditional accept, Bob signs Alice's PGP certificate
-and issues a request to befriend her.  Alternatively, he could issue a request
-to befriend her and wait for her to sign his certificate and investigates her
-profile prior to signing hers.
+overlay, a time stamp, and Bob's certificate identifier.  The friendship
+request is encrypted using Bob's public key and signed using Alice's private
+key for the purposes of anonymity and authenticity.  When Bob receives the
+friendship request, he can verify that the request was made for Bob by Alice.
+Upon receiving the friendship request, he has three choices:  a conditional
+accept, an unconditional accept, or a reject.  During an unconditional accept,
+Bob signs Alice's PGP certificate and issues a request to befriend her.
+Alternatively, he could issue a request to befriend her and wait for her to
+sign his certificate and investigates her profile prior to signing hers.
 
 Discovery of a user is not limited to the directory entries.  Because users
 have a public overlay based mailbox, they are not required to discover each
@@ -342,25 +345,24 @@ to an individual profile.
 Using the techniques such as those described in~\cite{vpo}, it is feasible to
 efficiently multiplex a P2P system across multiple, virtual private overlays
 enabling each profile owner to have a profile overlay consisting of their
-online friends.  For access control, we employ a PKI, where each member uses
-the signed certificate generated during the ``finding and verifying friends''
-stage.  All links are encrypted using symmetric security algorithms established
-through the PKI, thus preventing uninvited guests from gaining direct access to
-the overlay and hence the profile.  Because the profile owner also is the CA
-for all members of the overlay, they can easily revoke users from access to the
-profile overlay.  \cite{vpo} describes efficient mechanisms for overlay
-revocation through the use of broadcasting for immediate revocation and the use
-of DHT for indirect and permanent revocation.
+online friends.  For access control, OverSoc employs point-to-point encryption
+and authentication, peers bootstrap private connections by exchanging the base
+of the PGP certificate and the profile overlays signature packet obtained in
+the ``making friends'' stage.  Because the profile owner also is the CA for all
+members of the overlay, they can easily revoke users from access to the profile
+overlay.  \cite{vpo} describes efficient mechanisms for overlay revocation
+through the use of broadcasting for immediate revocation and the use of DHT for
+indirect and permanent revocation.
 
 The message board of a profile can be stored in two ways: distributed within
 the profile overlay via a data store or stored on the profile owner's personal
-computing devices.  The distributed data store provide the profile when the
+computing devices.  The distributed data store provides the profile when the
 owner is offline and also distributes the load for popular profiles.  For
-higher availability, each peer should always be a provider for all data in
-their profile when they are online.  To ensure authenticity and integrity, all
-peers should sign their messages and each peer's certificate should be
-available in the overlay for verification.  Messages that are unsigned should
-be ignored by all members of the overlay.  An ideal overlay for this purpose
+higher availability, each peer always stores and provides all data in their
+profile when they are online.  To ensure authenticity and integrity, peers sign
+their messages and each peer's certificate is available in the overlay as well
+as stored by mutual friends for verification.  Messages that are unsigned are
+ignored by all members of the overlay.  An ideal overlay for this purpose
 should support complex queries~\cite{complex_queries} allowing easy access to
 data stored chronologically, by content, by type, i.e., media, status updates,
 or message board discussions.
@@ -368,41 +370,43 @@ or message board discussions.
 Private messaging in the profile overlay is unidirectional; only the profile
 owner can receive private messages using their overlay.  To enforce this, a
 private message should be prepended with a symmetric key encrypted by the
-profile owners public key, the message should be appended by a hash of the
-message to ensure integrity and the entire message encrypted by the symmetric
-key.  This approach ensures that only the sender and the profile owner can
-decrypt the private message.  The contents of the private message should
-include the sender, time sent, and the subject.  Messages can be stored in well
-known locations, so that the profile owner can either poll the location.
+profile owners public key, the message should be appended by a signature of the
+message using the private key of the message sender, and the entire message
+encrypted by the symmetric key.  This approach ensures that only the sender and
+the profile owner can decrypt the private message and verify the senders
+identity.  The contents of the private message include the sender, time sent,
+and the subject.  Messages are be stored in well known locations in the DHT,
+like ``private messages for me'', so that the profile owner can either poll the
+location.
 
-\subsection{Event Based Message Notification}
+%\subsection{Event Based Message Notification}
 
-Both the directory and profile overlays have methods by which peers can receive
-messages.  In the directory overlay, these take form by means of friendship
-requests and friendship accepts, certificate signature packets.  The profile
-overlay supports private messages.  While polling the location in the DHT
-occasionally will allow peers to receive the messages, polling has inherent
-delays and network costs.  Alternatively, event  enable peers to receive sent
-messages very quickly after they have been sent with minimal impact on network
-throughput.
+%Both the directory and profile overlays have methods by which peers can receive
+%messages.  In the directory overlay, these take form by means of friendship
+%requests and friendship accepts, certificate signature packets.  The profile
+%overlay supports private messages.  While polling the location in the DHT
+%occasionally will allow peers to receive the messages, polling has inherent
+%delays and network costs.  Alternatively, event  enable peers to receive sent
+%messages very quickly after they have been sent with minimal impact on network
+%throughput.
 
-A simple method for implementing an event notification system involves using
-the DHT.  Each event would have an identification that would map to a list of
-peers wanting to know when an event occurred and the data associated with it.
-Thus mapping the $(event id, listener)$ to the DHT could be done by hashing a
-string such as ``private messages for me'' or taking a hash of the user's
-certificate hash for public overlay messages and storing the profile owners
-active nodes into the list of listeners .  When a message is inserted into the
-user's mailbox, the sender could query this list and send to each listener a
-notification of the new private message.  Alternatively, if a higher degree of
-anonymity is required, the DHT server could be modified to forward the response
-to the listeners directly rather than returning a list of listeners.  Of
-course, this does not prevent potential race conditions occurring, such as a
-situation where a peer recently joined their profile overlay, had already
-queried their mailbox and found it empty, while simultaneously a private
-message was sent to them yet they were not in the listeners list.  Thus
-occasional polling is required, though can be minimized, the longer a node has
-been online.
+%A simple method for implementing an event notification system involves using
+%the DHT.  Each event would have an identification that would map to a list of
+%peers wanting to know when an event occurred and the data associated with it.
+%Thus mapping the $(event id, listener)$ to the DHT could be done by hashing a
+%string such as ``private messages for me'' or taking a hash of the user's
+%certificate hash for public overlay messages and storing the profile owners
+%active nodes into the list of listeners .  When a message is inserted into the
+%user's mailbox, the sender could query this list and send to each listener a
+%notification of the new private message.  Alternatively, if a higher degree of
+%anonymity is required, the DHT server could be modified to forward the response
+%to the listeners directly rather than returning a list of listeners.  Of
+%course, this does not prevent potential race conditions occurring, such as a
+%situation where a peer recently joined their profile overlay, had already
+%queried their mailbox and found it empty, while simultaneously a private
+%message was sent to them yet they were not in the listeners list.  Thus
+%occasional polling is required, though can be minimized, the longer a node has
+%been online.
 
 \subsection{Active Peers}
 
@@ -421,84 +425,84 @@ Groups can be considered extensions of profile overlays.  The fundamental
 difference between a group and a profile is that a group lacks private
 messaging and has shared ownership.  So just as a peer can find a profile in
 the directory by hashing the name of the user and other identifiable
-information, so can the user find the group.  Like the certificate of the
-user, the members of a group sign the group's certificate to represent their
-membership to that group.  The user requests membership to the group and a
-group manager can sign the certificate allowing that member access to the
-group.  Finally, the group can be bootstrapped in the same way as the profile
-overlay through the directory overlay.
+information, so can the user find the group.  Like the certificate of the user,
+the members of a group sign the group's certificate to represent their
+membership to that group.  In OverSoc, users request membership to the group
+like they do friendship requests, in response a group manager can sign their
+certificate allowing that member access to the group.  Finally, the group can
+be bootstrapped in the same way as the profile overlay through the directory
+overlay.
 
 The unique challenge presented by groups is the sharing of the CA task.  A
 decentralized solution would be for all members of the group to be listed in
-the groups DHT and when a peer becomes a manager, their certificate is added
-to the certificate chain for the group enabling them to sign certificates for
-that group.  If an administrator loses their position, then all members who
-had their certificate signed by that administrator would need to obtain a new
-certificate.  Alternatively, the owner of the group and the original CA could
-sign the group members certificates again, so that they are signed by the root
-CA and would not lose access if administration changes.
+the groups DHT and when a peer becomes a manager, they obtain a new signature
+packet that contains a user-defined component stating that they are managers.
+If an administrator loses their position, then all members who had their
+certificate signed by that administrator would need to obtain a new
+certificate.  To avoid member churn, the owner could provide signature packets
+for all group members.  Thus the managers just allow temporary access until the
+owner comes online and provides more permanent access.
 
 \section{User Interaction}
 \label{user_interaction}
 
-Though this paper involves many components that are outside the realms of many
-users, use of the system should be transparent to the user such that
-interaction with this system should be no different than existing online social
-networks.  The user space implementation could consist of a downloadable
-application or a browser based Flash or Silverlight application.  If the user,
-Bob, had already created an account, Bob would be presented with an interface
-showing their friends profiles.  Based upon Bob's configuration, the social
-application could retrieve profile updates as he navigates to individual
-profiles or as soon as the application joins an individual profile overlay,
-reactive versus proactive profile querying.  
+OverSoc consists of many components that are transparent to the user, the user
+experience should appear to the user no differently than an existing online
+social network.  The OverSoc could be a downloadable application or a browser
+based Flash or Silverlight application.  If the user, Bob, had already created
+an account, Bob would be presented with an interface showing their friends
+profiles.  Based upon Bob's configuration, the social application could
+retrieve profile updates as he navigates to individual profiles or as soon as
+the application joins an individual profile overlay, reactive versus proactive
+profile querying.  
 
-If this was Bob's first time starting the application, he would be presented
-with screens asking for his privacy preferences, such as whether or not he
-wants his information in the directory overlay, if he felt comfortable enough
-with the idea of people knowing he was a member of the social network and who
-his friends are.  Then the application would ask for personal information to
-populate his profile and to generate his directory information.  At which
-point, the application would join the overlay and create Bob's private overlay.
-Bob could then start searching for friends, make friend requests, and respond
-to friend requests.
+If this was Bob's first time starting OverSoc, he would be presented with
+screens asking for his privacy preferences, such as whether or not he wants his
+information in the directory overlay, if he felt comfortable enough with the
+idea of people knowing he was a member of the social network and who his
+friends are.  Then OverSoc would ask for personal information to populate his
+profile and to generate his directory information.  At which point, the OverSoc
+would join the overlay and create Bob's private overlay.  Bob could then start
+searching for friends, make friend requests, and respond to friend requests.
 
 Recently, Bob had been thinking about his high school days and was curious if
-Alice was also a member of this social network, though Bob did not have Alice's
-e-mail address, just her first and last name.  Bob enters Alice's name into the
-search box and is presented by a list of Alice's.  As Bob reviews each of the
-entries, he recognizes an Alice that is friend's with some of the same people
-Bob was in high school.  Bob selects to become her friend.  At which point, the
-application transparently inserts a friendship request to Alice and signs Alice's
-certificate so Alice can view Bob's profile.  Of course that is because Bob has
-chosen to allow user-initiated friend requests access to his profile.  Alice
-receives Bob's request, peruses his profile and feels fine becoming friends with
-Bob, which initiates a transparent process of signing Bob's certificate and
-placing the result in the public overlay.  There is one problem though, when
-Bob receives Alice's signature and views her profile, he realizes that this
-is some other Alice.  He quickly chooses to defriend her.  This causes Bob's
-application to broadcast a revocation for Alice's signature and to store the
-revocation in the DHT.  Alice, who was viewing Bob's profile, is notified of
-this sudden loss of trust and while she is able to view the contents of Bob's
-profile, which she has already accessed and obtained, she can no longer
-receive updates as members of Bob's overlay prevent her from accessing it.
+Alice was also a member of OverSoc, though Bob did not have Alice's e-mail
+address, just her first and last name.  Bob enters Alice's name into the
+OverSoc search box and is presented by a list of Alice's.  As Bob reviews each
+of the entries, he recognizes an Alice that is friend's with some of the same
+people Bob was in high school.  Bob selects to become her friend.  At which
+point, the OverSoc transparently inserts a friendship request to Alice and
+signs Alice's certificate so Alice can view Bob's profile.  Of course that is
+because Bob has chosen to allow user-initiated friend requests access to his
+profile.  Alice receives Bob's request, peruses his profile and feels fine
+becoming friends with Bob, which initiates a transparent process of signing
+Bob's certificate and placing the result in the public overlay.  There is one
+problem though, when Bob receives Alice's signature and views her profile, he
+realizes that this is some other Alice.  He quickly chooses to defriend her.
+This causes Bob's OverSoc instance to broadcast a revocation for Alice's
+signature and to store the revocation in the DHT.  Alice, who was viewing Bob's
+profile, is notified of this sudden loss of trust and while she is able to view
+the contents of Bob's profile, which she has already accessed and obtained, she
+can no longer receive updates as members of Bob's overlay prevent her from
+accessing it.
 
-In another instance, Bob bumped into Carol, who e-mailed Bob a copy of her
-certificate.  Bob points his social application to the certificate, and it
-verifies that he wants to become friends with the identity associated with it.
-When he accepts, the application immediately submits a request to become
-Carol's friend.  Carol receives notification and accepts Bob's friendship
-request.  At this point, both Bob and Carol have transparently exchanged signed
-certificates and have mutual access to each other profiles.  As Bob reads
-Carol's latest news, he remembers a funny personal story and that he would like
-to share with Carol.  So he sends Carol a private message.  Carol is offline
-though.  The next time Carol goes online, her social application discovers the
-message and presents it to her.  In this scenario, Bob's application has taken
-the private message, secured it with her public key and a symmetric key and
-signed it with his private key.  After which, it inserts the message  into the
-DHT and sends a notice to the event notification system, which detects that
-there were no listeners.  When Carol's application comes online, it queries the
-DHT receiving the message.  Prior to presenting Carol the message, the
-application decrypts and verifies the message.
+%In another instance, Bob bumped into Carol, who e-mailed Bob a copy of her
+%certificate.  Bob points OverSoc to the certificate, and OverSoc verifies that
+%he wants to become friends with the identity associated with the certificate.
+%When he accepts, OverSoc immediately submits a request to become Carol's
+%friend.  Carol receives notification and accepts Bob's friendship request.  At
+%this point, both Bob and Carol have transparently exchanged signed certificates
+%and have mutual access to each other profiles.  As Bob reads Carol's latest
+%news, he remembers a funny personal story and that he would like to share with
+%Carol.  So he sends Carol a private message.  Carol is offline though.  The
+%next time Carol goes online, her social application discovers the message and
+%presents it to her.  In this scenario, OverSoc  has taken the private message,
+%secured it with her public key and a symmetric key and signed it with his
+%private key.  After which, it inserts the message into the DHT and sends a
+%notice to the event notification system, which detects that there were no
+%listeners.  When Carol's application comes online, it queries the DHT receiving
+%the message.  Prior to presenting Carol the message, the OverSoc decrypts and
+%verifies the message.
 
 \section{Challenges}
 \label{outstanding}
@@ -575,29 +579,27 @@ than 48 seconds to become connected to both overlays.
 \section{Conclusion}
 \label{conclusion}
 
-In this paper, we proposed methods by which a social network can be
-decentralized through the use of structure P2P overlays.  P2P systems, in
-general, have very nice properties that make them attractive for average users.
-Namely, they require minimal configuration and organization of resources, in
-addition, P2P systems naturally handle increased demand to additional peers.
-Our approach is based upon the use of a multiple overlay system, where all
-users join a public directory overlay and their's as well as their friends
-profile overlays.  The directory overlay enables users to find and befriend
-other peers and bootstrap connections into the secure profile overlays.  Upon
-forming a friendship through the directory overlay, peers are given CA signed
-certificates that allow them to join each other's profile overlay.  The owner
-of the profile overlay acts as CA enabling unilateral dismissal of friendships
-via certificate revocation using efficient and reliable methods.  Additionally,
-the profile overlay provides a clean abstraction for privacy purposes that
-simplfies access to profile data, as only members of the overlay have access to
-the profile.  Existing work in the realm of structured overlays describes
+In this paper, we proposed OverSoc, a system that constructs a decentralized
+online social network through the use of structure P2P overlays.  P2P systems,
+in general, have very nice properties that make them attractive for average
+users.  Namely, they require minimal configuration and organization of
+resources, in addition, P2P systems naturally handle increased demand due to
+additional peers.  Our approach is based upon the use of a multiple overlay
+system, where all users join a public directory overlay which assists in
+finding friends and groups and bootstrapping into their private overlays.  When
+making a friendship or joining groups, peers exchange signatures that enable
+access to each others overlays.  Each private overlay employs point-to-point
+encryption and authentication so that only trusted peers can access the
+overlays.  The use of unique overlays for each profile and group allows a clean
+abstraction for privacy purposes that simplifies security handling of access to
+private data.  Existing work in the realm of structured overlays describes
 mechanisms for efficiently and securely storing profile information into the
 profile overlay.  Our proposed system returns control of the social network and
 more importantly users' identity to the users and eliminates the need for
-centralized social networks.
+centralized social networks.\\
 
-\small{
-\bibliographystyle{IEEEtran}
+{\small
+\bibliographystyle{abbrv}
 \bibliography{SocialProfileOverlays}
 }
 

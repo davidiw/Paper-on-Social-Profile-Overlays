@@ -1,0 +1,120 @@
+\begin{thebibliography}{10}
+\medskip
+
+\bibitem{tribler-osn}
+S.~M.~A. Abbas, et~al.
+\newblock In {\em IEEE Workshops on Enabling Technologies},
+  2009.
+
+\bibitem{sword}
+J.~Albrecht, et~al.
+\newblock Design and implementation trade-offs for wide-area resource
+  discovery.
+\newblock In {\em ACM Trans. Internet Technol.}, 2008.
+
+\bibitem{brunet}
+P.~O. Boykin et~al.
+\newblock A symphony conducted by brunet.
+\newblock \url{http://arxiv.org/abs/0709.4048}, 2007.
+
+\bibitem{p2p_socialnetwork}
+S.~Buchegger and A.~Datta.
+\newblock A case for {P2P} infrastructure for social networks - opportunities
+  \& challenges.
+\newblock In {\em WONS '09: The Sixth International Conference on Wireless
+  On-demand Network Systems and Services}, 2009.
+
+\bibitem{peerson}
+S.~Buchegger, D.~Schi\"{o}berg, L.~H. Vu, and A.~Datta.
+\newblock Peerson: P2p social networking: early experiences and insights.
+\newblock In {\em SNS '09: Proceedings of the Second ACM EuroSys Workshop on
+  Social Network Systems}, 2009.
+
+\bibitem{kosha}
+A.~R. Butt, T.~A. Johnson, Y.~Zheng, and Y.~C. Hu.
+\newblock Kosha: A peer-to-peer enhancement for the network file system.
+\newblock In {\em IEEE/ACM Supercomputing 2004}.
+
+\bibitem{one_ring}
+M.~Castro, et al.
+\newblock One ring to rule them all: {Service} discover and binding in
+  structured peer-to-peer overlay networks.
+\newblock In {\em SIGOPS European Workshop}, Sept. 2002.
+
+\bibitem{matryoshka}
+L.~A. Cutillo, R.~Molva, and T.~Strufe.
+\newblock Privacy preserving social networking through decentralization.
+\newblock In {\em Wireless On-Demand Network Systems and Services (WONS'09)}.
+
+\bibitem{dynamo}
+G.~DeCandia, et~al.
+\newblock Dynamo: amazon's highly available key-value store.
+\newblock In {\em SOSP '07: Proceedings of twenty-first ACM SIGOPS symposium on
+  Operating systems principles}, pages 205--220, New York, NY, USA, 2007. ACM.
+
+\bibitem{complex_queries}
+M.~Harren, et~al.
+\newblock Complex queries in dht-based peer-to-peer networks.
+\newblock In {\em IPTPS '01: Revised Papers from the First International
+  Workshop on Peer-to-Peer Systems}, 2002.
+
+\bibitem{symphony}
+G.~S. Manku, M.~Bawa, and P.~Raghavan.
+\newblock Symphony: distributed hashing in a small world.
+\newblock In {\em USITS}, 2003.
+
+\bibitem{kademlia}
+P.~Maymounkov and D.~Mazi\`{e}res.
+\newblock Kademlia: A peer-to-peer information system based on the {XOR}
+  metric.
+\newblock In {\em IPTPS '02}, 2002.
+
+\bibitem{facebook_beacon}
+J.~C. Perez.
+\newblock Facebook's beacon more intrusve than previously thought.
+\newblock
+  \url{http://www.pcworld.com/article/140182/facebooks_beacon_more_intrusive_t%
+han_previously_thought.html}.
+
+\bibitem{can}
+S.~Ratnasamy, et~al.
+\newblock A scalable content-addressable network.
+\newblock In {\em In Proceedings of ACM SIGCOMM}, 2001.
+
+\bibitem{can_multicast}
+S.~Ratnasamy, et~al.
+\newblock In {\em Workshop on Networked Group Communication (NGC'01)}.
+
+\bibitem{past}
+A.~Rowstron and P.~Druschel.
+\newblock Storage management and caching in {PAST}, a large-scale, persistent
+  peer-to-peer storage utility.
+\newblock In {\em Symposium on Operating Systems Principles (SOSP'01)}.
+
+\bibitem{pastry}
+A.~Rowstron and P.~Druschel.
+\newblock Pastry: {Scalable,} decentralized object location and routing for
+  large-scale peer-to-peer systems.
+\newblock In {\em IFIP/ACM International Conference on Distributed Systems
+  Platforms (Middleware)}, November 2001.
+
+\bibitem{vis-a-vis}
+A.~Shakimov, H.~Lim, L.~P. Cox, and R.~Caceres.
+\newblock Vis-\`{a}-vis:online social networking via virtual individual
+  servers.
+\newblock Technical report, May 2008.
+
+\bibitem{chord}
+I.~Stoica and et~al.
+\newblock Chord: {A} scalable {Peer-To-Peer} lookup service for internet
+  applications.
+\newblock In {\em SIGCOMM}, 2001.
+
+\bibitem{vpo}
+D.~I. Wolinsky, et~al.
+\newblock Virtual private overlays: Secure group communication in
+  {NAT}-constrained environments.
+\newblock http://arxiv.org/abs/1001.2569
+\newblock 2010.
+
+\end{thebibliography}
