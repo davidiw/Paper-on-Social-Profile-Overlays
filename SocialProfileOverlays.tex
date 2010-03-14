@@ -1,4 +1,4 @@
-\documentclass{sig-alternate}
+\documentclass{IEEEtran}
 %\usepackage{times}
 \usepackage{url}
 \usepackage{epsfig}
@@ -9,42 +9,41 @@
 %\hyphenpenalty=10000
 %\tolerance=10000
 
-\setlength{\parskip}{0pt}
-\setlength{\parsep}{0pt}
-\setlength{\headsep}{0pt}
-\setlength{\topskip}{0pt}
-\setlength{\topmargin}{0pt}
-\setlength{\topsep}{0pt}
-\setlength{\partopsep}{0pt}
-\setlength{\floatsep}{5pt}
-\setlength{\textfloatsep}{5pt}
-\setlength{\intextsep}{5pt}
+%\setlength{\parskip}{0pt}
+%\setlength{\parsep}{0pt}
+%\setlength{\headsep}{0pt}
+%\setlength{\topskip}{0pt}
+%\setlength{\topmargin}{0pt}
+%\setlength{\topsep}{0pt}
+%\setlength{\partopsep}{0pt}
+%\setlength{\floatsep}{5pt}
+%\setlength{\textfloatsep}{5pt}
+%\setlength{\intextsep}{5pt}
 
 \begin{document}
 
 
-\twocolumn[%
-\centerline{\Large \bf OverSoc: Social Profile Based Overlays} 
-  \medskip
-  \centerline{\bf David Isaac Wolinsky, Pierre St. Juste, P. Oscar Boykin, Renato Figueiredo}
-  \centerline{\bf University of Florida}
-  \bigskip
-]
+%\twocolumn[%
+%\centerline{\Large \bf OverSoc: Social Profile Based Overlays} 
+%  \medskip
+%  \centerline{\bf David Isaac Wolinsky, Pierre St. Juste, P. Oscar Boykin, Renato Figueiredo}
+%  \centerline{\bf University of Florida}
+%  \bigskip
+%]
 
-%\title{OverSoc: Social Profile Based Overlays}
+\title{OverSoc: Social Profile Based Overlays}
 
-%\numberofauthors{1}
+\author{
+\IEEEauthorblockA{
+  David Isaac Wolinsky,
+  Pierre St. Juste,
+  P. Oscar Boykin,
+  Renato Figueiredo
+}
+\IEEEauthorblockN{University of Florida}
+}
 
-%\author{
-%\alignauthor
-%David Isaac Wolinsky,
-%Pierre St. Juste,
-%P. Oscar Boykin,
-%Renato Figueiredo \\
-%\affaddr{University of Florida}
-%}
-
-%\maketitle
+\maketitle
 
 \begin{abstract}
 
@@ -331,7 +330,9 @@ have a public overlay based mailbox, they are not required to discover each
 other only through the directory.  Instead, they can use out of band discovery,
 using mechanisms like e-mail, chat, or personal websites to exchange
 certificates.  Once a peer has received another peer's certificate, they can
-submit secure friendship requests using the public overlay.
+submit secure friendship requests using the public overlay.  In fact, this sort
+of system can leverage the trust established by an existing social network to
+sign and exchange OverSoc's certificates.  
 
 \subsection{The Profile Overlay}
 \label{profile_overlay}
@@ -486,23 +487,38 @@ the contents of Bob's profile, which she has already accessed and obtained, she
 can no longer receive updates as members of Bob's overlay prevent her from
 accessing it.
 
-%In another instance, Bob bumped into Carol, who e-mailed Bob a copy of her
-%certificate.  Bob points OverSoc to the certificate, and OverSoc verifies that
-%he wants to become friends with the identity associated with the certificate.
-%When he accepts, OverSoc immediately submits a request to become Carol's
-%friend.  Carol receives notification and accepts Bob's friendship request.  At
-%this point, both Bob and Carol have transparently exchanged signed certificates
-%and have mutual access to each other profiles.  As Bob reads Carol's latest
-%news, he remembers a funny personal story and that he would like to share with
-%Carol.  So he sends Carol a private message.  Carol is offline though.  The
-%next time Carol goes online, her social application discovers the message and
-%presents it to her.  In this scenario, OverSoc  has taken the private message,
-%secured it with her public key and a symmetric key and signed it with his
-%private key.  After which, it inserts the message into the DHT and sends a
-%notice to the event notification system, which detects that there were no
-%listeners.  When Carol's application comes online, it queries the DHT receiving
-%the message.  Prior to presenting Carol the message, the OverSoc decrypts and
-%verifies the message.
+In another instance, Bob bumped into Carol, who e-mailed Bob a copy of her
+certificate.  Bob points OverSoc to the certificate, and OverSoc verifies that
+he wants to become friends with the identity associated with the certificate.
+When he accepts, OverSoc immediately submits a request to become Carol's
+friend.  Carol receives notification and accepts Bob's friendship request.  At
+this point, both Bob and Carol have transparently exchanged signed certificates
+and have mutual access to each other profiles.  As Bob reads Carol's latest
+news, he remembers a funny personal story and that he would like to share with
+Carol.  So he sends Carol a private message.  Carol is offline though.  The
+next time Carol goes online, her social application discovers the message and
+presents it to her.  In this scenario, OverSoc  has taken the private message,
+secured it with her public key and a symmetric key and signed it with his
+private key.  After which, it inserts the message into the DHT and sends a
+notice to the event notification system, which detects that there were no
+listeners.  When Carol's application comes online, it queries the DHT receiving
+the message.  Prior to presenting Carol the message, the OverSoc decrypts and
+verifies the message.
+
+The OverSoc architecture can leverage existing social networks to bootstrap
+trust.  For example, consider Bob and David are two friends on Facebook.  Bob
+joins a Facebook application called ``OverSoc/Facebook Bridge'', which stores
+a copy of his OverSoc certificate in his personal profile.  Bob has been
+bragging to David about OverSoc and mentions to him how easy it is to migrate
+from Facebook to OverSoc using this application.  So David joins OverSoc as
+well as the application.  When David accesses the application, it pastes his
+certificate to his profile, notifies notifies him that he has a friend already
+using it, Bob, and that he can immediately sign Bob's certificate, and leaves a
+request for Bob to sign his certificate.  Additionally, when David logs into
+OverSoc, he can leave a friend request there as well, so that the next time
+Bob accesses Facebook or OverSoc, he will receive David's request and can sign
+David's certificate.  At which point, both will have access to each others
+OverSoc profile overlays.  
 
 \section{Challenges}
 \label{outstanding}
@@ -598,9 +614,7 @@ profile overlay.  Our proposed system returns control of the social network and
 more importantly users' identity to the users and eliminates the need for
 centralized social networks.\\
 
-{\small
-\bibliographystyle{abbrv}
+\bibliographystyle{IEEEtran}
 \bibliography{SocialProfileOverlays}
-}
 
 \end{document}
