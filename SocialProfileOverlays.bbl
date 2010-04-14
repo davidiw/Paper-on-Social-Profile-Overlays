@@ -37,6 +37,15 @@ D.~I. Wolinsky, K.~Lee, T.~W. Choi, P.~O. Boykin, and R.~Figueiredo, ``Virtual
   private overlays: Secure group communication in {NAT}-constrained
   environments,'' January 2010.
 
+\bibitem{gnutella}
+T.~Klingberg and R.~Manfredi, ``Gnutella 0.6,''
+  \url{http://rfc-gnutella.sourceforge.net/src/rfc-0_6-draft.html}, June 2002.
+
+\bibitem{fasttrack}
+hex, ``The fasttrack protocol,''
+  \url{http://cvs.berlios.de/cgi-bin/viewcvs.cgi/gift-fasttrack/giFT-FastTrack%
+/PROTOCOL}, September 2004.
+
 \bibitem{pastry}
 A.~Rowstron and P.~Druschel, ``Pastry: {Scalable,} decentralized object
   location and routing for large-scale peer-to-peer systems,'' in
@@ -59,32 +68,14 @@ P.~Maymounkov and D.~Mazi\`{e}res, ``Kademlia: A peer-to-peer information
 S.~Ratnasamy, P.~Francis, S.~Shenker, and M.~Handley, ``A scalable
   content-addressable network,'' in \emph{In Proceedings of ACM SIGCOMM}, 2001.
 
-\bibitem{dynamo}
-G.~DeCandia, D.~Hastorun, M.~Jampani, G.~Kakulapati, A.~Lakshman, A.~Pilchin,
-  S.~Sivasubramanian, P.~Vosshall, and W.~Vogels, ``Dynamo: amazon's highly
-  available key-value store,'' in \emph{SOSP '07: Proceedings of twenty-first
-  ACM SIGOPS symposium on Operating systems principles}.\hskip 1em plus 0.5em
-  minus 0.4em\relax New York, NY, USA: ACM, 2007, pp. 205--220.
+\bibitem{beehive}
+V.~Ramasubramanian and E.~G. Sirer, ``Beehive: O(1)lookup performance for
+  power-law query distributions in peer-to-peer overlays,'' in \emph{Symposium
+  on Networked Systems Design and Implementation}, 2004.
 
-\bibitem{past}
-A.~Rowstron and P.~Druschel, ``Storage management and caching in {PAST}, a
-  large-scale, persistent peer-to-peer storage utility,'' in \emph{Symposium on
-  Operating Systems Principles (SOSP'01)}.
-
-\bibitem{kosha}
-A.~R. Butt, T.~A. Johnson, Y.~Zheng, and Y.~C. Hu, ``Kosha: A peer-to-peer
-  enhancement for the network file system,'' in \emph{IEEE/ACM Supercomputing
-  2004}.
-
-\bibitem{one_ring}
-M.~Castro, P.~Druschel, A.-M. Kermarrec, and A.~Rowstron, ``One ring to rule
-  them all: {Service} discover and binding in structured peer-to-peer overlay
-  networks,'' in \emph{SIGOPS European Workshop}, Sep. 2002.
-
-\bibitem{can_multicast}
-S.~Ratnasamy, M.~Handley, R.~M. Karp, and S.~Shenker, ``Application-level
-  multicast using content-addressable networks,'' in \emph{Workshop on
-  Networked Group Communication (NGC'01)}.
+\bibitem{bootstrapping}
+D.~I. Wolinsky, P.~S. Juste, P.~O. Boykin, and R.~Figueiredo, ``Addressing the
+  p2p bootstrap problem for small overlay networks,'' \url{}, 2010.
 
 \bibitem{peerson}
 S.~Buchegger, D.~Schi\"{o}berg, L.~H. Vu, and A.~Datta, ``Peerson: P2p social
@@ -116,8 +107,14 @@ M.~Harren, J.~M. Hellerstein, R.~Huebsch, B.~T. Loo, S.~Shenker, and I.~Stoica,
   Revised Papers from the First International Workshop on Peer-to-Peer
   Systems}, 2002.
 
-\bibitem{brunet}
-P.~O. Boykin and et~al., ``A symphony conducted by brunet,''
-  \url{http://arxiv.org/abs/0709.4048}, 2007.
+\bibitem{past}
+A.~Rowstron and P.~Druschel, ``Storage management and caching in {PAST}, a
+  large-scale, persistent peer-to-peer storage utility,'' in \emph{Symposium on
+  Operating Systems Principles (SOSP'01)}.
+
+\bibitem{kosha}
+A.~R. Butt, T.~A. Johnson, Y.~Zheng, and Y.~C. Hu, ``Kosha: A peer-to-peer
+  enhancement for the network file system,'' in \emph{IEEE/ACM Supercomputing
+  2004}.
 
 \end{thebibliography}

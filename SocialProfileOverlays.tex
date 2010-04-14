@@ -1,35 +1,31 @@
 \documentclass{IEEEtran}
-%\usepackage{times}
 \usepackage{url}
 \usepackage{epsfig}
 \usepackage{footnote}
 \usepackage{amsmath}
-\usepackage[small,it]{caption}
 
-%\hyphenpenalty=10000
-%\tolerance=10000
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+\setlength{\headsep}{0pt}
+\setlength{\topskip}{0pt}
+\setlength{\topmargin}{0pt}
+\setlength{\footskip}{0pt}
 
-%\setlength{\parskip}{0pt}
-%\setlength{\parsep}{0pt}
-%\setlength{\headsep}{0pt}
-%\setlength{\topskip}{0pt}
-%\setlength{\topmargin}{0pt}
-%\setlength{\topsep}{0pt}
-%\setlength{\partopsep}{0pt}
-%\setlength{\floatsep}{5pt}
-%\setlength{\textfloatsep}{5pt}
-%\setlength{\intextsep}{5pt}
+\setlength{\topsep}{2pt}
+\setlength{\partopsep}{0pt}
+\setlength{\itemsep}{0pt}
+
+\setlength{\floatsep}{4pt}
+\setlength{\dblfloatsep}{4pt}
+\setlength{\textfloatsep}{4pt}
+\setlength{\dbltextfloatsep}{4pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\intextsep}{2pt}
+
+\hyphenpenalty=10000
+\tolerance=10000
 
 \begin{document}
-
-
-%\twocolumn[%
-%\centerline{\Large \bf OverSoc: Social Profile Based Overlays} 
-%  \medskip
-%  \centerline{\bf David Isaac Wolinsky, Pierre St. Juste, P. Oscar Boykin, Renato Figueiredo}
-%  \centerline{\bf University of Florida}
-%  \bigskip
-%]
 
 \title{OverSoc: Social Profile Based Overlays}
 
@@ -95,8 +91,8 @@ their own decentralized systems for the purpose of data sharing, interactive
 activities, and other networking-enabled activities.  In this paper, we extend
 our previous work~\cite{vpo} to enable social network profile overlays.  The
 previous work addresses the challenges of bootstrapping secure, private
-overlays in NAT and firewall environments by using a public overlay for
-discovery and as a relay or communication transport.  
+overlays in network address translator (NAT) and firewall environments by using
+a public overlay for discovery and as a relay or communication transport.  
 
 A typical social network consists of users and groups.  Each user has a
 profile, a set of friends, and private messaging; and each group consists of
@@ -153,53 +149,36 @@ P2P systems, when the system lacks dedicated bootstrapping nodes.
 \subsection{Structured P2P Overlays}
 
 P2P systems typically come in two flavors:  unstructured and structured.
-Unstructured systems are generally constructed by peers attempting to maintain
-a certain amount of connections to other peers in the P2P system, whereas
-structured systems organize into well-defined topologies, such as 2-D rings or
-hypercubes.  Though unstructured systems are typically simpler to bootstrap and
-maintain, they rely on global knowledge, flooding, or stochastic techniques to
-search for information in an overlay and thus creating potential scalability
-constraints.  Alternatively, structured systems have guaranteed search time
-typically with a lower bound of $O(\log N)$, though recent research has shown
-that these systems can be constructed to support $O(1)$ search time.  Some
-examples of structured systems are Pastry~\cite{pastry}, Chord~\cite{chord},
-Symphony~\cite{symphony}, Kademlia~\cite{kademlia}, CAN~\cite{can}, and
-Dynamo~\cite{dynamo}.
+Unstructured systems~\cite{gnutella, fasttrack} are generally constructed by
+peers attempting to maintain a certain amount of connections to other peers in
+the P2P system, whereas structured systems organize into well-defined
+topologies, such as trees, 1-D rings, or hypercubes.  Though unstructured
+systems are typically simpler to bootstrap and maintain, they rely on global
+knowledge, flooding, or stochastic techniques to search for information in an
+overlay, creating potential scalability constraints.  Alternatively, structured
+systems~\cite{pastry, chord, symphony, kademlia, can} have guaranteed search
+time typically with a lower bound of $O(\log N)$ and in some cases even
+$O(1)$~\cite{beehive}.  The most common feature found in structured overlays is
+the support for a decentralized storage / retrieval system called a distributed
+hash table (DHT), that maps keys with associated data to specific node IDs in
+an overlay.
 
-A key component of most structured overlays is support for decentralized
-storage / retrieval of information by mapping keys to specific node IDs in an
-overlay called a distributed hash table (DHT).  At a minimum, the data is
-stored at the node ID either smaller or larger to the data's node ID and for
-fault tolerance the data can be stored at other nodes.  DHTs can be used by
-peers of systems to coordinate allocation and discovery of resources, making
-them attractive for self-configuration in decentralized collaborative
-environments.  DHTs provide the building blocks to form more complex
-distributed data stores as presented in Past~\cite{past} and
-Kosha~\cite{kosha}.
-
-One of the key challenges to overlays is the bootstrapping problem, that is,
-how does one find an active member in the overlay in order to become a member.
-In large public systems, often times, the owners of the project and sometimes
-corporate sponsors provide these resources, though these types of bootstrapping
-peers are typically not available for small, private overlays.  The
-bootstrapping problem can be divided into two components: finding a
-bootstrapping member of the overlay and handling connectivity constraints if
-the overlay has no members with public addresses.  In~\cite{one_ring,
-can_multicast}, the authors discuss the concept of a single overlay supporting
-services through the use of additional overlays, which use the underlying
-overlay to assist in discovery, this deals with the component of finding a
-bootstrap peer.  To address the challenge of bootstrapping peers behind NATs,
-we described a system in~\cite{vpo}, which enables the public overlay to act as
-a NAT traversal rendezvous point.  More specifically, a peer, attempting to
-join a private overlay, queries the public overlay's DHT to obtain a list of
-currently online private overlay peers who have matching public IDs.  The peers
-then use the public overlay, in addition to direct UDP or TCP links, to
-communicate with the private overlay nodes and bootstrap into the private
-overlay.  This method enables peers even behind firewalls and NATs to have
-publicly available addresses in the public overlay.  Additionally this work
-describes mechanisms that enable the use of PKI technologies to seamlessly
-secure both point-to-point and end-to-end communication in a structured
-overlay.
+The bootstrap problem presents a challenge to scenario discussed in this paper,
+where peers will be joining many overlays with overlay peers behind NATs.
+\cite{bootstrapping} presents an abstraction layer to bootstrapping across
+existing overlays.  The key components are a method for reflection in order to
+obtain publicly reachable addresses, so peers behind network address
+translators and firewalls can receive incoming connection requests;
+communication relaying to share public addresses and communicate when direct
+communication is not feasible; and rendezvous for discovering remote peers,
+when the overlay lacks stable membership.  The solution has been applied to
+structured overlays, that enables peers to bootstrap structured overlays from a
+structured overlay regardless of NAT conditions.  In this application, a peer
+obtains a public address mapping, when connecting to the public overlay, has
+the ability to route packets through recursive routing on the overlay, and uses
+the DHT to discover other peers in the private overlay.  Peers multiplex the
+same UDP and TCP sockets in the private overlay to reuse the reflection
+services provided in the public overlay.
 
 \subsection{Peer-to-Peer Social Networks}
 
@@ -210,11 +189,11 @@ their friends by hashing their unique identifiers (e.g. friends' email
 addresses).  The retrieved meta data contains information for obtaining the
 profile data such as IP address and file version. Their work relies on a PKI
 system that provides identification, encryption, and access control.  In
-contrast, OverSoc users and groups have their own private overlay secured by
-point-to-point encryption and authentication amongst all peers in the overlay.
-The private overlay provides a clean abstraction of access control, whereby
-once admitted to a private overlay, users can access a distributed data store
-which holds the contents of the owners profile.
+contrast, OverSoc maps individual user profiles and groups to a private overlay
+secured by point-to-point encryption and authentication amongst all peers in
+the overlay.  The private overlay provides a clean abstraction of access
+control, whereby once admitted to a private overlay, users can access a
+distributed data store which holds the contents of the owners profile.
 
 Shakimov et al. in \cite{vis-a-vis} take a different approach by depending on
 virtual individual servers (VIS) hosted on a cloud infrastructure such as
@@ -247,6 +226,13 @@ improve availability.  While helper nodes are used to assist with
 communication between peers behind NATs.  The approach lacks security and
 access control considerations and lacks the guarantees and the simplicity of
 the abstraction offered by a structured overlay.
+
+\begin{figure*}[h!t!]
+\centering
+\epsfig{file=figs/friendship_request.eps, width=6in}
+\caption{Alice requests and receives a friendship from Bob.}
+\label{fig:friend_request}
+\end{figure*}
 
 \section{Social Overlays}
 \label{social_overlays}
@@ -281,9 +267,8 @@ all entries are legitimate, the overlay must have some method of supporting
 multiple, distinct values at the same key, requiring the application and user
 to parse the responses and determine the best match by reviewing the contents
 of each certificate.  Alternatively, a technique like Sword~\cite{sword}, which
-supports distributing the data across a set of nodes and using a bounded
-broadcast to discover peers that match all information, could be used for
-searching.
+supports attribute based searching, could be used to efficiently find peers in
+an overlay.
 
 To address trust levels when searching for friends, a PGP certificate can be
 used to store user's public information and verify user's friends and groups.
@@ -302,17 +287,25 @@ friendship link is still active without accessing the profile overlay of either
 peers.  Thus peers that maintain friendships need to periodically exchange
 signature packets.
 
+\begin{figure*}[h!t!]
+\centering
+\epsfig{file=figs/friendship_join.eps, width=6in}
+\caption{Alice, already a friend of Bob, connects to his social overlay.}
+\label{fig:friendship_join}
+\end{figure*}
+
 \subsection{Making Friends}
 
-Once a user, \textit{Alice}, has found a friend candidate, \textit{Bob},
-\textit{Alice} can issue a friendship request and store it in the DHT using the
-hash of Bob's certificate as an index, this acts a public overlay mailbox.
-\textit{Bob} can review the public information of \textit{Alice} prior to
-making a decision.  If \textit{Bob} accepts the request, \textit{Alice} and
-\textit{Bob} exchange signature packets and are granted access to each other's
-profiles.  Once profile access has been enabled, the \textit{Alice} and
-\textit{Bob} can learn more information, and if it turns out to be a mistake,
-either one of them can unilaterally end the relationship.
+In this example, Alice becomes friends with Bob, as illustrated in Figure
+\ref{fig:friend_request}.  Once a user, \textit{Alice}, has found a friend
+candidate, \textit{Bob}, \textit{Alice} can issue a friendship request and
+store it in the DHT using the hash of Bob's certificate as an index, this acts
+a public overlay mailbox.  \textit{Bob} can review the public information of
+\textit{Alice} prior to making a decision.  If \textit{Bob} accepts the
+request, \textit{Alice} and \textit{Bob} exchange signature packets and are
+granted access to each other's profiles.  Once profile access has been enabled,
+the \textit{Alice} and \textit{Bob} can learn more information, and if it turns
+out to be a mistake, either one of them can unilaterally end the relationship.
 
 Alice's friendship request should contain a pointer to her certificate in the
 overlay, a time stamp, and Bob's certificate identifier.  The friendship
@@ -349,7 +342,8 @@ enabling each profile owner to have a profile overlay consisting of their
 online friends.  For access control, OverSoc employs point-to-point encryption
 and authentication, peers bootstrap private connections by exchanging the base
 of the PGP certificate and the profile overlays signature packet obtained in
-the ``making friends'' stage.  Because the profile owner also is the CA for all
+the ``making friends'' stage.  Because the profile owner also is the CA,
+control of which could be distributed across the users resources, for all
 members of the overlay, they can easily revoke users from access to the profile
 overlay.  \cite{vpo} describes efficient mechanisms for overlay revocation
 through the use of broadcasting for immediate revocation and the use of DHT for
@@ -380,45 +374,18 @@ and the subject.  Messages are be stored in well known locations in the DHT,
 like ``private messages for me'', so that the profile owner can either poll the
 location.
 
-%\subsection{Event Based Message Notification}
-
-%Both the directory and profile overlays have methods by which peers can receive
-%messages.  In the directory overlay, these take form by means of friendship
-%requests and friendship accepts, certificate signature packets.  The profile
-%overlay supports private messages.  While polling the location in the DHT
-%occasionally will allow peers to receive the messages, polling has inherent
-%delays and network costs.  Alternatively, event  enable peers to receive sent
-%messages very quickly after they have been sent with minimal impact on network
-%throughput.
-
-%A simple method for implementing an event notification system involves using
-%the DHT.  Each event would have an identification that would map to a list of
-%peers wanting to know when an event occurred and the data associated with it.
-%Thus mapping the $(event id, listener)$ to the DHT could be done by hashing a
-%string such as ``private messages for me'' or taking a hash of the user's
-%certificate hash for public overlay messages and storing the profile owners
-%active nodes into the list of listeners .  When a message is inserted into the
-%user's mailbox, the sender could query this list and send to each listener a
-%notification of the new private message.  Alternatively, if a higher degree of
-%anonymity is required, the DHT server could be modified to forward the response
-%to the listeners directly rather than returning a list of listeners.  Of
-%course, this does not prevent potential race conditions occurring, such as a
-%situation where a peer recently joined their profile overlay, had already
-%queried their mailbox and found it empty, while simultaneously a private
-%message was sent to them yet they were not in the listeners list.  Thus
-%occasional polling is required, though can be minimized, the longer a node has
-%been online.
-
 \subsection{Active Peers}
 
 The directory overlay should be used to assist in finding currently active
 peers in the profile overlays.  By placing their node IDs at a well-known,
-unique per-profile overlay keys in the DHT, active peers can bootstrap
-incoming peers into the profile overlay.  We implemented and evaluated this
-concept in~\cite{vpo}.  Because the profile overlay members all use PKI to
-ensure membership, even if malicious peers insert their ID into the active
-list, it would be useless as the peer would only form connections with peers
-who also have a signed certificate.
+unique per-profile overlay keys in the DHT, active peers can bootstrap incoming
+peers into the profile overlay.  We implemented and evaluated this concept
+in~\cite{vpo}.  Because the profile overlay members all use PKI to ensure
+membership, even if malicious peers insert their ID into the active list, it
+would be useless as the peer would only form connections with peers who also
+have a signed certificate.  Extending from the earlier example, where Alice
+became Bob's friends, Figure~\ref{fig:friendship_join} presents in detail how
+she would join his private overlay.
 
 \subsection{Groups}
 
@@ -561,36 +528,16 @@ which methods should be used. A possible approach is to replicate public
 information within a user's profile overlay thus providing an alternative
 directory overlay for querying prior to using the public directory overlay.
 
-\section{Initial Results}
-\label{experiments}
-
-This environment presents many challenges in terms of providing user seamless
-similar to that of a centralized environment.  Using tools that we developed
-to evaluate the virtual private overlays, we performed some experiments that
-focus on connectivity times to profile overlays and querying data in the
-directory overlay.  Both systems were evaluated using a network modeling tool,
-though the virtual private overlay technique was also tested using PlanetLab
-using Brunet~\cite{brunet}, a P2P framework supporting virtual private overlays.
-
-To evaluate the public overlay, peers first queried the DHT to obtain a pointer
-to a certificate and then obtained the certificate in a following request.  So
-the result presented is effectively the time it takes to make two requests into
-a DHT.  Using the network modeling tool, the average time for a network size of
-100,000 was 4.04 seconds.
-
-To evaluate the virtual private overlays, we created various sized public and
-private overlays and determined the time it took for a new peer to join both
-overlays.  The incoming peer joined the public overlay, then queried the public
-DHT for members active in the private overlay.  At which point, the peer
-created another private overlay node and used these results to bootstrap
-connections into the private overlay.  When the private overlay node became
-connected, the correct peer on both sides, as determined by the structured
-overlay, the test was completed.  In the PlanetLab experiments, the public
-overlay consisted of 600 nodes and a random distribution of peers in the
-private overlay with point-to-point security links enabled, the time to connect
-was less than 22 seconds.  The network modeler focused on larger systems, up to
-100,000 peers in both overlays.  In these environments, it never took longer
-than 48 seconds to become connected to both overlays.
+{\bf 4) Social profile data storage} - In previous works, DHTs have been used
+as the building blocks to form more complex distributed data stores as
+presented in Past~\cite{past} and Kosha~\cite{kosha}.  Application of data
+stores will be heavily dependent on the churn rate associated with the overlay.
+If the system lacks any reasonably stable membership, large data files may be
+corrupted while smaller data sets are completely lost.  Ideally, the usage
+model would be similar to those of Skype and Twitter, which have active
+processes for the duration of the computers usage.  In an environment like
+this, data storage would be limited only by the available bandwidth of the
+participants.
 
 \section{Conclusion}
 \label{conclusion}
@@ -612,7 +559,9 @@ private data.  Existing work in the realm of structured overlays describes
 mechanisms for efficiently and securely storing profile information into the
 profile overlay.  Our proposed system returns control of the social network and
 more importantly users' identity to the users and eliminates the need for
-centralized social networks.\\
+centralized social networks.  The most important insight in this paper is that
+structured overlays can be used to efficiently organize and maintain a social
+network.\\
 
 \bibliographystyle{IEEEtran}
 \bibliography{SocialProfileOverlays}
